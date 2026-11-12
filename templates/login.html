@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - Smile Cloud</title>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons (Para el ícono del ojo) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/base.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/login.css') }}">
+  <!-- NUEVO: estilos de alertas -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/alertas.css') }}">
+</head>
+
+<body>
+  <div class="login-wrapper">
+    <div class="login-container">
+      
+      <!-- LOGO ANIMADO -->
+      <div class="login-logo text-center">
+        <img src="{{ url_for('static', filename='imagenes/logoSC.png') }}" alt="Logo Smile Cloud" class="img-fluid floating-logo">
+      </div>
+      
+      <h1 class="login-title">Smile Cloud</h1>
+      <p class="login-subtitle">Sistema de Gestión Odontológica</p>
+
+      <!-- NUEVO: el error ahora se muestra con SweetAlert2 (ya no la alerta roja de Bootstrap) -->
+      {% if error %}
+      <div id="sc-error" hidden data-mensaje="{{ error }}"></div>
+      {% endif %}
+
+      
+      <form method="POST" id="formLogin">
+        <div class="mb-3">
+          <label for="correo" class="form-label">Correo Electrónico</label>
+          <input type="email" class="form-control" id="correo" name="correo" placeholder="nombre@correo.com" required {% if tiempo_restante %}disabled{% endif %}>
+        </div>
+
+        <!-- CAMPO DE CONTRASEÑA CON BOTÓN DE VISIBILIDAD -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="input-group">
+            <input type="password" class="form-control border-end-0" id="password" name="password" placeholder="••••••••" required  {% if tiempo_restante %}disabled{% endif %}>
+            <button class="btn btn-outline-secondary border-start-0 toggle-password" type="button" id="togglePassword">
+              <i class="bi bi-eye" id="eyeIcon"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center mb-4">
+          <a href="/RecupContra" class="text-decoration-none small fw-semibold text-gradient-link">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        
+        <button type="submit" class="btn btn-gradient w-100 py-2 shadow" id="btnIngresar"
+                {% if tiempo_restante %}disabled{% endif %}>
+          Ingresar al Sistema
+        </button>
+
+        
+     
+        {% if tiempo_restante %}
+        <div id="mensajeBloqueo" class="bloqueo-card mt-3" role="status">
+
+          <div class="bloqueo-icono">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+
+          <p class="bloqueo-titulo">
+            Acceso temporalmente bloqueado
+          </p>
+
+          <p class="bloqueo-descripcion">
+            Por seguridad, podrás intentarlo nuevamente en:
+          </p>
+
+          <div class="bloqueo-tiempo">
+            <span id="contador">{{ tiempo_restante }}</span>
+            <span class="bloqueo-unidad">segundos</span>
+          </div>
+
+        </div>
+        {% endif %}
+
+
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- NUEVO: SweetAlert2 y funciones de alertas -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+  <script src="{{ url_for('static', filename='JS/alertas.js') }}"></script>
+
+  <!-- NUEVO: mostrar el error de inicio de sesión -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var caja = document.getElementById('sc-error');
+      if (!caja) { return; }
+      scAviso('No pudimos iniciar sesión', caja.getAttribute('data-mensaje'), 'error');
+    });
+  </script>
+
+  
+  {% if tiempo_restante %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      let segundos = Number(document.getElementById('contador').textContent);
+
+      const contador = document.getElementById('contador');
+      const correo = document.getElementById('correo');
+      const password = document.getElementById('password');
+      const boton = document.getElementById('btnIngresar');
+
+      if (!contador || !correo || !password || !boton) return;
+
+      correo.disabled = true;
+      password.disabled = true;
+      boton.disabled = true;
+
+      const finBloqueo = Date.now() + segundos * 1000;
+
+      const intervalo = setInterval(function () {
+        segundos = Math.max(
+          0,
+          Math.ceil((finBloqueo - Date.now()) / 1000)
+        );
+
+        contador.textContent = segundos;
+
+        if (segundos === 0) {
+          clearInterval(intervalo);
+          window.location.reload();
+        }
+      }, 250);
+    });
+  </script>
+  {% endif %}
+
+
+  <!-- SCRIPT PARA ALTERNAR LA CONTRASEÑA -->
+  <script>
+    const togglePassword = document.querySelector('#togglePassword');
+    const password = document.querySelector('#password');
+    const eyeIcon = document.querySelector('#eyeIcon');
+
+    togglePassword.addEventListener('click', function () {
+      // Alternar el tipo de input
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      
+      // Alternar el ícono del ojo
+      eyeIcon.classList.toggle('bi-eye');
+      eyeIcon.classList.toggle('bi-eye-slash');
+    });
+  </script>
+</body>
+</html>

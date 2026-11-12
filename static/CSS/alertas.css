@@ -1,0 +1,170 @@
+/* =========================================================
+   SMILE CLOUD · ALERTAS (SweetAlert2)
+   Archivo: static/CSS/alertas.css
+   ========================================================= */
+
+.swal2-container.swal2-top {
+    padding-top: 22px;
+}
+
+.swal2-container {
+    backdrop-filter: blur(3px);
+}
+
+/* ---------- Tarjeta ---------- */
+.sc-pop {
+    width: 26em;
+    max-width: 92vw;
+    padding: 2rem 1.75rem 1.6rem;
+    background: #ffffff;
+    border: 1px solid #dce7eb;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(38, 50, 56, 0.14);
+    font-family: inherit;
+}
+
+.sc-pop .swal2-title {
+    margin: 0 0 0.45rem;
+    padding: 0;
+    color: #263238;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.sc-pop .swal2-html-container {
+    margin: 0;
+    padding: 0;
+    color: #607d8b;
+    font-size: 0.93rem;
+    line-height: 1.55;
+}
+
+.sc-pop .swal2-actions {
+    margin: 1.4rem 0 0;
+    gap: 10px;
+}
+
+/* ---------- Icono ---------- */
+.sc-pop .swal2-icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 66px;
+    height: 66px;
+    margin: 0 auto 1.1rem;
+    border: 0 !important;
+    background: #e8f7fa !important;
+    color: var(--ic);
+}
+
+.sc-pop .swal2-icon svg {
+    width: 32px;
+    height: 32px;
+}
+
+/* Colores por tipo */
+.sc-pop.k-success { --ic: #00a8b5; }
+.sc-pop.k-info    { --ic: #087c88; }
+.sc-pop.k-error   { --ic: #d6454b; }
+.sc-pop.k-danger  { --ic: #d98a14; }
+
+.sc-pop.k-error  .swal2-icon { background: #fdecec !important; }
+.sc-pop.k-danger .swal2-icon { background: #fff4e0 !important; }
+
+/* ---------- Botones ---------- */
+.sc-ok,
+.sc-no {
+    border: 0;
+    border-radius: 12px;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.12s ease, filter 0.15s ease;
+}
+
+.sc-ok:hover,
+.sc-no:hover {
+    filter: brightness(1.07);
+    transform: translateY(-1px);
+}
+
+.sc-ok:focus-visible,
+.sc-no:focus-visible {
+    outline: 2px solid var(--ic);
+    outline-offset: 2px;
+}
+
+.sc-ok {
+    background: linear-gradient(135deg, #00a8b5, #087c88);
+    color: #ffffff;
+}
+
+.sc-no {
+    background: #e8f7fa;
+    color: #087c88;
+}
+
+/* Botón rojo cuando la acción es destructiva (eliminar, inactivar) */
+.sc-pop.k-danger .sc-ok {
+    background: #e5484d;
+}
+
+/* ---------- Animación de entrada desde arriba ---------- */
+@keyframes scDown {
+    from { transform: translateY(-34px); opacity: 0; }
+    to   { transform: none; opacity: 1; }
+}
+
+.sc-down {
+    animation: scDown 0.3s ease-out;
+}
+
+/* ---------- Notificación pequeña (toast) ---------- */
+.sc-toast {
+    padding: 0.7rem 1.1rem !important;
+    background: #ffffff;
+    border: 1px solid #dce7eb;
+    border-left: 5px solid var(--ic);
+    border-radius: 14px !important;
+    box-shadow: 0 12px 32px rgba(38, 50, 56, 0.14) !important;
+    font-family: inherit;
+}
+
+.sc-toast.k-success { --ic: #00a8b5; }
+.sc-toast.k-info    { --ic: #087c88; }
+.sc-toast.k-error   { --ic: #d6454b; }
+
+.sc-toast .swal2-icon {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin: 0 0.7rem 0 0;
+    border: 0 !important;
+    background: #e8f7fa !important;
+    color: var(--ic);
+}
+
+.sc-toast .swal2-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.sc-toast .swal2-title {
+    margin: 0;
+    color: #263238;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.sc-toast .swal2-timer-progress-bar {
+    background: #00a8b5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sc-down { animation: none; }
+    .sc-ok, .sc-no { transition: none; }
+}

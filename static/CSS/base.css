@@ -1,0 +1,291 @@
+/* =========================================================
+   ESTRUCTURA GLOBAL (Scroll natural habilitado para los módulos)
+   ========================================================= */
+html {
+    height: 100%;
+}
+
+body.sc-app-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: #f4f8fa;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.sc-main-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* =========================================================
+   NAVBAR MODERNA Y ANIMACIÓN DE LA MUELA
+   ========================================================= */
+.sc-navbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #dce7eb;
+    min-height: 68px;
+    padding: 6px 25px;
+    z-index: 1050;
+    box-shadow: 0 4px 15px rgba(38, 50, 56, 0.04);
+}
+
+.sc-navbar-inner {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.sc-brand-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+/* Animación real de la muelita flotando y girando sutilmente */
+.floating-logo-nav {
+    width: 45px;
+    height: auto;
+    object-fit: contain;
+    animation: muelaViva 3.5s ease-in-out infinite;
+    filter: drop-shadow(0 3px 6px rgba(0, 168, 181, 0.3));
+}
+
+@keyframes muelaViva {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg) scale(1);
+    }
+    50% {
+        transform: translateY(-5px) rotate(6deg) scale(1.05);
+    }
+}
+
+.sc-brand-text {
+    font-size: 18px;
+    color: #126782;
+    font-weight: 500;
+    letter-spacing: -0.5px;
+}
+.sc-brand-text strong {
+    color: #00a8b5;
+    font-weight: 750;
+}
+
+.sc-menu {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+}
+
+.sc-menu a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: #263238;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 7px 10px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.sc-menu a i {
+    font-size: 15px;
+    color: #607d8b;
+}
+
+.sc-menu a:hover {
+    color: #00a8b5;
+    background: #e8f7fa;
+}
+
+.sc-home-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #e8f7fa;
+    border-radius: 20px;
+    color: #087c88;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid #d2eaee;
+}
+
+/* PERFIL DE USUARIO EN CÍRCULO */
+.sc-profile-item {
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: 1px solid #dce7eb;
+}
+
+.usuario-menu {
+    position: relative;
+    list-style: none;
+}
+
+.usuario-letra {
+    list-style: none;
+    cursor: pointer;
+}
+
+.usuario-letra::-webkit-details-marker {
+    display: none;
+}
+
+.sc-avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00a8b5 0%, #126782 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    border: 2px solid #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 168, 181, 0.35);
+    transition: all 0.25s ease;
+}
+
+.sc-avatar-circle:hover {
+    transform: scale(1.08);
+    box-shadow: 0 5px 14px rgba(0, 168, 181, 0.5);
+}
+
+.usuario-opciones {
+    position: absolute;
+    top: 48px;
+    right: 0;
+    width: 200px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(38, 50, 56, 0.15);
+    overflow: hidden;
+    border: 1px solid #dce7eb;
+}
+
+.sc-profile-caption {
+    padding: 10px 14px;
+    border-bottom: 1px solid #dce7eb;
+    margin-bottom: 4px;
+}
+.sc-profile-caption strong { display: block; font-size: 13px; color: #263238; }
+.sc-profile-caption small { display: block; font-size: 11px; color: #607d8b; }
+.usuario-opciones a {
+    display: block;
+    padding: 10px 14px;
+    color: #263238;
+    text-decoration: none;
+    font-size: 13px;
+}
+.usuario-opciones a:hover {
+    background: #e8f7fa;
+    color: #00a8b5;
+}
+
+/* =========================================================
+   ALERTAS MODERNAS Y UNIFICADAS — SMILE CLOUD
+   ========================================================= */
+.alert {
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 16px 20px !important;
+    font-size: 14px !important;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 30px rgba(38, 50, 56, 0.08) !important;
+    animation: aparecerAlerta 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes aparecerAlerta {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Franja decorativa lateral para darle identidad */
+.alert::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+}
+
+/* ALERTA DE ÉXITO (Success) */
+.alert-success {
+    background: #e8f8f5 !important;
+    color: #0e6251 !important;
+}
+.alert-success::before {
+    background: #27ae60;
+}
+.alert-success .btn-close {
+    filter: invert(30%) sepia(50%) saturate(500%) hue-rotate(100deg);
+}
+
+/* ALERTA DE ERROR / PELIGRO (Danger) */
+.alert-danger {
+    background: #fdeeee !important;
+    color: #922b21 !important;
+}
+.alert-danger::before {
+    background: #e74c3c;
+}
+.alert-danger .btn-close {
+    filter: invert(20%) sepia(80%) saturate(800%) hue-rotate(340deg);
+}
+
+/* ALERTA DE ADVERTENCIA (Warning) */
+.alert-warning {
+    background: #fef9e7 !important;
+    color: #7d6608 !important;
+}
+.alert-warning::before {
+    background: #f1c40f;
+}
+
+/* ALERTA INFORMATIVA (Info / Primary) */
+.alert-info, .alert-primary {
+    background: #eaf4f8 !important;
+    color: #126782 !important;
+}
+.alert-info::before, .alert-primary::before {
+    background: var(--primary, #00a8b5);
+}
+
+/* Botón de cierre de las alertas limpio */
+.alert .btn-close {
+    margin-left: auto;
+    padding: 0;
+    background: transparent;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.alert .btn-close:hover {
+    opacity: 1;
+}

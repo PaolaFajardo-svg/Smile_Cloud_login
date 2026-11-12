@@ -1,0 +1,21 @@
+
+# Entorno virtual
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Archivos privados
+.env
+.env.*
+credenciales_google.json
+
+# Archivos temporales
+*.log
+.DS_Store
+Thumbs.db
+
+# Visual Studio Code
+.vscode/

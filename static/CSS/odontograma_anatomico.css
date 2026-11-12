@@ -1,0 +1,926 @@
+:root {
+    --mint-50: #f4fbf8;
+    --mint-100: #e7f6ef;
+    --mint-200: #ccebdd;
+    --mint-300: #a8dcc7;
+
+    --teal-500: #32a98d;
+    --teal-600: #258b76;
+    --teal-700: #176c5d;
+
+    --ink: #243b37;
+    --muted: #738781;
+    --line: #e2eee9;
+    --white: #ffffff;
+
+    --shadow: 0 10px 28px rgba(38, 91, 75, 0.07);
+
+    --caries: #e85d63;
+    --restauracion: #478bd1;
+    --sellante: #24aeb5;
+    --corona: #e6b43d;
+    --endodoncia: #9565cf;
+    --implante: #a87349;
+    --protesis: #db75a6;
+    --fractura: #f28b43;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--mint-50);
+    color: var(--ink);
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+}
+
+button,
+textarea {
+    font: inherit;
+}
+
+
+/* ENCABEZADO */
+
+.topbar {
+    min-height: 94px;
+    padding: 18px clamp(20px, 4vw, 58px);
+    background: var(--white);
+    border-bottom: 1px solid var(--line);
+
+    display: grid;
+    grid-template-columns: 1fr minmax(280px, 1.5fr) 1fr;
+    align-items: center;
+    gap: 20px;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: inherit;
+    text-decoration: none;
+    width: fit-content;
+}
+
+.brand-icon {
+    display: grid;
+    place-items: center;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 14px;
+    color: white;
+    font-size: 25px;
+
+    background: linear-gradient(
+        145deg,
+        #55c7a7,
+        #258b76
+    );
+
+    box-shadow: 0 5px 12px #258b762b;
+}
+
+.brand-name {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.brand-name span {
+    color: var(--teal-600);
+}
+
+.page-heading {
+    text-align: center;
+}
+
+.page-heading h1 {
+    margin: 0;
+    font-size: 23px;
+    letter-spacing: -0.5px;
+}
+
+.page-heading p {
+    margin: 5px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.header-tag {
+    justify-self: end;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 9px 13px;
+    border-radius: 30px;
+
+    background: var(--mint-50);
+    color: var(--teal-700);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--teal-500);
+}
+
+
+/* CONTENEDOR GENERAL */
+
+.page-wrap {
+    width: min(1540px, 100%);
+    padding: 28px clamp(16px, 3vw, 42px) 20px;
+    margin: 0 auto;
+}
+
+
+/* TARJETA DEL PACIENTE */
+
+.patient-card {
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    padding: 22px 25px;
+    margin-bottom: 25px;
+
+    border: 1px solid var(--line);
+    border-radius: 18px;
+
+    background: var(--white);
+    box-shadow: var(--shadow);
+}
+
+.patient-accent {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    background: var(--teal-500);
+}
+
+.patient-avatar {
+    flex: 0 0 56px;
+    height: 56px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+    background: var(--mint-100);
+    color: var(--teal-700);
+
+    font-size: 22px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.patient-main {
+    min-width: 210px;
+    flex: 1.1;
+}
+
+.patient-label,
+.eyebrow {
+    color: var(--teal-600);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.15px;
+}
+
+.patient-main h2 {
+    margin: 7px 0 3px;
+    font-size: 18px;
+}
+
+.patient-note {
+    margin: 0;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.patient-details {
+    flex: 1.7;
+
+    display: grid;
+    grid-template-columns: repeat(3, minmax(100px, 1fr));
+    gap: 18px;
+}
+
+.patient-field {
+    min-width: 0;
+    padding-left: 18px;
+    border-left: 1px solid var(--line);
+}
+
+.field-label {
+    display: block;
+    margin-bottom: 7px;
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.patient-field strong {
+    display: block;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+
+/* DISTRIBUCIÓN PRINCIPAL */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    align-items: start;
+    gap: 22px;
+}
+
+.odontogram-card,
+.panel-card {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+}
+
+.odontogram-card {
+    min-width: 0;
+    padding: 25px 22px 22px;
+}
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 27px;
+}
+
+.section-heading h2,
+.panel-card h2 {
+    margin: 6px 0 0;
+    font-size: 18px;
+    letter-spacing: -0.25px;
+}
+
+.tooth-count {
+    border: 1px solid var(--mint-200);
+    border-radius: 30px;
+    background: var(--mint-50);
+    color: var(--teal-700);
+
+    padding: 8px 11px;
+
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* ARCADA DENTAL */
+
+.arch-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    margin: 0 0 15px;
+
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.arch-line {
+    height: 1px;
+    width: 45px;
+    background: var(--mint-200);
+}
+
+.teeth-scroll {
+    width: 100%;
+    overflow-x: auto;
+    padding: 3px 2px 9px;
+}
+
+.fila-dientes {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+
+    min-width: 850px;
+}
+
+.diente {
+    position: relative;
+    flex: 1 0 43px;
+    min-width: 0;
+    max-width: 65px;
+
+    text-align: center;
+    cursor: pointer;
+}
+
+.numero-diente {
+    display: block;
+    margin-bottom: 7px;
+
+    color: #607a72;
+    font-size: 11px;
+    font-weight: 800;
+
+    transition: color 0.15s;
+}
+
+.diente svg {
+    display: block;
+    width: 100%;
+    height: 126px;
+    overflow: visible;
+}
+
+.diente .silueta {
+    fill: #fffefa;
+    stroke: #9eb8ad;
+    stroke-width: 1.7;
+    stroke-linejoin: round;
+}
+
+.diente .zona-superficie {
+    fill: #dff3ea;
+    stroke: #b3d8c9;
+    stroke-width: 1;
+
+    opacity: 0.5;
+    cursor: pointer;
+
+    transition:
+        opacity 0.15s,
+        fill 0.15s;
+}
+
+.diente:hover .zona-superficie {
+    opacity: 0.95;
+}
+
+.diente .zona-superficie.seleccionada {
+    fill: #80d6b8;
+    stroke: #23876f;
+    stroke-width: 2;
+    opacity: 1;
+}
+
+.diente .zona-superficie:hover {
+    fill: #9de2c9;
+    opacity: 1;
+}
+
+.diente:hover .numero-diente,
+.diente.seleccionado .numero-diente {
+    color: var(--teal-700);
+}
+
+.diente .marca-condicion {
+    pointer-events: none;
+    font-size: 21px;
+    font-weight: 900;
+    text-anchor: middle;
+    dominant-baseline: central;
+
+    paint-order: stroke;
+    stroke: white;
+    stroke-width: 2px;
+}
+
+
+/* LÍNEA MEDIA */
+
+.midline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    margin: 11px 0 20px;
+    color: #9aada6;
+}
+
+.midline span {
+    height: 1px;
+    flex: 1;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--mint-200)
+    );
+}
+
+.midline span:last-child {
+    transform: scaleX(-1);
+}
+
+.midline small {
+    font-size: 10px;
+}
+
+.lower-label {
+    margin-top: 0;
+}
+
+
+/* LEYENDA */
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 17px;
+    align-items: center;
+
+    padding: 17px 0;
+    margin-top: 13px;
+
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+
+    color: #5e746d;
+    font-size: 11px;
+}
+
+.legend-title {
+    width: 100%;
+    color: var(--muted);
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.legend > span:not(.legend-title) {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+}
+
+.legend-dot.caries {
+    background: var(--caries);
+}
+
+.legend-dot.restauracion {
+    background: var(--restauracion);
+}
+
+.legend-dot.sellante {
+    background: var(--sellante);
+}
+
+.legend-dot.corona {
+    background: var(--corona);
+}
+
+.legend-dot.endodoncia {
+    background: var(--endodoncia);
+}
+
+.legend-dot.implante {
+    background: var(--implante);
+}
+
+.legend-dot.protesis {
+    background: var(--protesis);
+}
+
+.legend-dot.fractura {
+    background: var(--fractura);
+}
+
+
+/* OBSERVACIONES */
+
+.observations {
+    padding-top: 20px;
+}
+
+.observations label {
+    display: block;
+    margin-bottom: 9px;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.observations textarea {
+    width: 100%;
+    min-height: 94px;
+    resize: vertical;
+
+    padding: 13px 14px;
+
+    border: 1px solid var(--line);
+    border-radius: 11px;
+
+    outline: none;
+    color: var(--ink);
+    background: #fbfdfc;
+
+    line-height: 1.5;
+}
+
+.observations textarea:focus {
+    border-color: var(--teal-500);
+    box-shadow: 0 0 0 3px #32a98d1a;
+}
+
+.observations textarea::placeholder {
+    color: #a3b2ad;
+}
+
+.observations p {
+    margin: 7px 0 0;
+    color: #8a9b95;
+    font-size: 10px;
+}
+
+
+/* PANEL LATERAL */
+
+.side-panel {
+    display: grid;
+    gap: 16px;
+}
+
+.panel-card {
+    padding: 21px;
+}
+
+.selection-card {
+    background: linear-gradient(
+        145deg,
+        #ffffff,
+        #f5fcf8
+    );
+}
+
+.selection-value {
+    margin-top: 15px;
+    padding: 13px 12px;
+
+    border: 1px solid var(--mint-200);
+    border-radius: 10px;
+
+    background: white;
+    color: var(--teal-700);
+
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.45;
+}
+
+.helper-text,
+.panel-description {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.55;
+}
+
+
+/* BOTONES DE CONDICIONES */
+
+.conditions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 17px;
+}
+
+.condicion {
+    min-height: 54px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 9px 10px;
+
+    border: 1px solid var(--line);
+    border-radius: 11px;
+
+    background: #fff;
+    color: #4e625c;
+
+    text-align: left;
+    cursor: pointer;
+
+    transition:
+        border-color 0.15s,
+        background 0.15s,
+        transform 0.15s;
+}
+
+.condicion:hover {
+    border-color: var(--mint-300);
+    background: var(--mint-50);
+    transform: translateY(-1px);
+}
+
+.condicion.activa {
+    border-color: var(--teal-500);
+    background: var(--mint-100);
+    box-shadow: 0 0 0 2px #32a98d17;
+}
+
+.condition-icon {
+    flex: 0 0 24px;
+    width: 24px;
+    height: 24px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 7px;
+    font-size: 14px;
+    font-style: normal;
+
+    background: currentColor;
+    color: white;
+}
+
+.condition-icon.caries {
+    background: #fff0f0;
+    color: var(--caries);
+}
+
+.condition-icon.restauracion {
+    background: #edf5ff;
+    color: var(--restauracion);
+}
+
+.condition-icon.sellante {
+    background: #e8fbfb;
+    color: var(--sellante);
+}
+
+.condition-icon.corona {
+    background: #fff8df;
+    color: #c3941e;
+}
+
+.condition-icon.endodoncia {
+    background: #f5edff;
+    color: var(--endodoncia);
+}
+
+.condition-icon.implante {
+    background: #f8eee6;
+    color: var(--implante);
+}
+
+.condition-icon.protesis {
+    background: #fff0f6;
+    color: var(--protesis);
+}
+
+.condition-icon.fractura {
+    background: #fff2e7;
+    color: var(--fractura);
+}
+
+.condicion span {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* BOTONES DE ACCIÓN */
+
+.button-stack {
+    display: grid;
+    gap: 9px;
+    margin-top: 17px;
+}
+
+.btn-secondary,
+.btn-danger {
+    min-height: 41px;
+    border-radius: 10px;
+
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+
+    transition: background 0.15s;
+}
+
+.btn-secondary {
+    border: 1px solid var(--mint-200);
+    background: var(--mint-50);
+    color: var(--teal-700);
+}
+
+.btn-secondary:hover {
+    background: var(--mint-100);
+}
+
+.btn-danger {
+    border: 1px solid #f3dada;
+    background: white;
+    color: #bd6262;
+}
+
+.btn-danger:hover {
+    background: #fff5f5;
+}
+
+.storage-note {
+    display: flex;
+    gap: 7px;
+
+    margin: 15px 0 0;
+
+    color: #85958f;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.storage-note span {
+    color: var(--teal-600);
+    font-weight: 800;
+}
+
+
+/* GUÍA DE SUPERFICIES */
+
+.surface-guide h2 {
+    margin-top: 0;
+    font-size: 15px;
+}
+
+.surface-guide ul {
+    padding-left: 17px;
+    margin: 13px 0 0;
+
+    color: #71847d;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.surface-guide strong {
+    color: #405b52;
+}
+
+
+/* PIE DE PÁGINA */
+
+.footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 25px 3px 5px;
+
+    color: #879991;
+    font-size: 11px;
+}
+
+.footer-mark {
+    color: var(--teal-500);
+    font-size: 17px;
+}
+
+.footer-separator {
+    color: #bdcdc6;
+}
+
+.footer-right {
+    margin-left: auto;
+}
+
+
+/* TABLET */
+
+@media (max-width: 1050px) {
+    .content-grid {
+        grid-template-columns: minmax(0, 1fr) 300px;
+        gap: 15px;
+    }
+
+    .odontogram-card {
+        padding: 20px 16px;
+    }
+
+    .patient-card {
+        flex-wrap: wrap;
+    }
+
+    .patient-main {
+        flex: 1;
+    }
+
+    .patient-details {
+        flex-basis: 100%;
+        margin-left: 74px;
+    }
+
+    .patient-field:first-child {
+        padding-left: 0;
+        border-left: 0;
+    }
+}
+
+
+/* CELULAR */
+
+@media (max-width: 760px) {
+    .topbar {
+        grid-template-columns: 1fr auto;
+    }
+
+    .page-heading {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        text-align: left;
+    }
+
+    .header-tag {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .page-heading h1 {
+        font-size: 20px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .side-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .patient-card {
+        padding: 19px 17px;
+        gap: 13px;
+    }
+
+    .patient-avatar {
+        flex-basis: 48px;
+        height: 48px;
+    }
+
+    .patient-main {
+        min-width: 0;
+    }
+
+    .patient-main h2 {
+        font-size: 16px;
+    }
+
+    .patient-details {
+        margin-left: 0;
+        gap: 10px;
+        grid-template-columns: 1fr;
+    }
+
+    .patient-field {
+        padding: 8px 0 0;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+    }
+
+    .patient-field:first-child {
+        border-top: 0;
+    }
+
+    .footer {
+        flex-wrap: wrap;
+    }
+
+    .footer-right {
+        width: 100%;
+        margin-left: 25px;
+    }
+}

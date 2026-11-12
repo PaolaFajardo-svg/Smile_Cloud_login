@@ -1,0 +1,748 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/usuarios.css') }}">
+{% endblock %}
+
+{% block title %}Usuarios | Smile Cloud{% endblock %}
+
+{% block content %}
+
+<!-- NUEVO: el error ahora se muestra con SweetAlert2 (ver script al final) -->
+{% if request.args.get('error') %}
+<div id="sc-error" hidden data-mensaje="{{ request.args.get('error') }}"></div>
+{% endif %}
+
+<div class="usuarios-container">
+    <div class="encabezado-usuarios">
+
+        <div>
+            <span class="etiqueta-usuarios">
+                <i class="bi bi-shield-lock"></i>
+                Administración
+            </span>
+
+            <h1>Gestión de Usuarios</h1>
+
+            <p>
+                Administra los usuarios y roles que tienen acceso a Smile Cloud.
+            </p>
+        </div>
+
+        <button class="btn-nuevo-usuario" type="button" onclick="abrirModalUsuario()">
+            <i class="bi bi-person-plus"></i>
+            Nuevo usuario
+        </button>
+
+    </div>
+
+    <div class="tarjetas-usuarios">
+
+        <div class="tarjeta-usuario">
+            <div class="icono-tarjeta-usuario">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div>
+                <span class="numero-usuario">{{ "%02d"|format(estadisticas.usuarios_registrados|int) }}</span>
+                <span class="nombre-tarjeta-usuario">Usuarios registrados</span>
+            </div>
+        </div>
+
+
+        <div class="tarjeta-usuario">
+            <div class="icono-tarjeta-usuario activo">
+                <i class="bi bi-person-check"></i>
+            </div>
+
+            <div>
+                <span class="numero-usuario">{{ "%02d"|format(estadisticas.usuarios_activos|int) }}</span>
+                <span class="nombre-tarjeta-usuario">Usuarios activos</span>
+            </div>
+        </div>
+
+
+        <div class="tarjeta-usuario">
+            <div class="icono-tarjeta-usuario inactivo">
+                <i class="bi bi-person-x"></i>
+            </div>
+
+            <div>
+                <span class="numero-usuario">{{ "%02d"|format(estadisticas.usuarios_inactivos|int) }}</span>
+                <span class="nombre-tarjeta-usuario">Usuarios inactivos</span>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="seccion-usuarios">
+
+        <div class="cabecera-usuarios">
+
+            <div>
+                <h2>
+                    <i class="bi bi-list-ul"></i>
+                    Usuarios registrados
+                </h2>
+
+                <p>
+                    Consulta y administra las cuentas del sistema.
+                </p>
+            </div>
+
+            <div class="buscador-usuarios">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    id="buscarUsuario"
+                    placeholder="Buscar usuario..."
+                    onkeyup="buscarUsuarios()"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="tabla-responsive-usuarios">
+
+            <table class="tabla-usuarios" id="tablaUsuarios">
+
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Correo electrónico</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for u in usuarios %}
+
+                    <tr>
+
+                        <td>
+                            <div class="usuario-info">
+
+                                <div class="avatar-usuario">
+                                    {{ u.usuario[0]|upper }}
+                                </div>
+
+                                <div>
+                                    <strong>{{ u.usuario }}</strong>
+                                    <span>{{ u.nombre }} {{ u.apellido }}</span>
+                                </div>
+
+                            </div>
+                        </td>
+
+                        <td>
+                            {{ u.correo }}
+                        </td>
+
+                        <td>
+                            <span class="rol-usuario {{ u.rol|lower }}">
+                                {{ 'Odontólogo' if u.rol == 'Odontologo' else u.rol }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="estado-usuario {{ u.estado|lower }}">
+                                <i class="bi bi-circle-fill"></i>
+                                {{ u.estado }}
+                            </span>
+                        </td>
+
+                        <td>
+
+                            <div class="acciones-usuario">
+
+                                <button
+                                    type="button"
+                                    class="btn-accion editar"
+                                    title="Editar usuario"
+                                    data-url="{{ url_for('editar_usuario', id=u.id_usuario) }}"
+                                    data-usuario="{{ u.usuario }}"
+                                    data-correo="{{ u.correo }}"
+                                    data-id-rol="{{ u.id_rol }}"
+                                    data-nombre="{{ u.nombre }}"
+                                    data-apellido="{{ u.apellido }}"
+                                    data-tipo-documento="{{ u.tipo_documento }}"
+                                    data-numero-documento="{{ u.numero_documento }}"
+                                    data-telefono="{{ u.telefono or '' }}"
+                                    onclick="editarUsuario(this)"
+                                >
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+
+                                {% if u.estado == 'Activo' %}
+
+                                <!-- NUEVO: confirmación con SweetAlert2 (antes usaba onsubmit con confirm) -->
+                                <form
+                                    action="{{ url_for('inactivar_usuario', id=u.id_usuario) }}"
+                                    method="POST"
+                                    data-sc-confirm="¿Inactivar usuario?"
+                                    data-sc-texto="{{ u.usuario }} no podrá iniciar sesión mientras esté inactivo."
+                                    data-sc-ok="Sí, inactivar"
+                                    data-sc-tipo="peligro"
+                                    style="display: inline-flex; margin: 0;"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="btn-accion desactivar"
+                                        title="Inactivar usuario"
+                                    >
+                                        <i class="bi bi-person-dash"></i>
+                                    </button>
+                                </form>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    {% if not usuarios %}
+
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 28px;">
+                            No hay usuarios registrados.
+                        </td>
+                    </tr>
+
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+
+
+            <!-- MENSAJE SIN RESULTADOS -->
+            <div id="sinResultadosUsuarios" class="sin-resultados-usuarios">
+
+                <i class="bi bi-search"></i>
+
+                <h3>No se encontraron usuarios</h3>
+
+                <p>
+                    Intenta realizar la búsqueda con otro nombre o correo.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<div id="modalUsuario" class="modal-usuario">
+
+    <div class="contenido-modal-usuario">
+
+        <div class="encabezado-modal-usuario">
+
+            <div>
+                <span class="icono-modal-usuario">
+                    <i id="iconoModalUsuario" class="bi bi-person-plus"></i>
+                </span>
+
+                <div>
+                    <h2 id="tituloModalUsuario">Nuevo usuario</h2>
+                    <p id="subtituloModalUsuario">Registra al funcionario y su cuenta en Smile Cloud.</p>
+                </div>
+            </div>
+
+            <button
+                type="button"
+                class="cerrar-modal-usuario"
+                onclick="cerrarModalUsuario()"
+            >
+                <i class="bi bi-x-lg"></i>
+            </button>
+
+        </div>
+
+
+        <form id="formUsuario" action="{{ url_for('crear_usuario') }}" method="POST">
+
+            <div class="formulario-usuarios">
+
+                <div class="campo-usuario">
+
+                    <label for="nombreFuncionario">
+                        Nombre
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-person"></i>
+
+                        <input
+                            type="text"
+                            id="nombreFuncionario"
+                            name="nombre"
+                            placeholder="Ej. María"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo-usuario">
+
+                    <label for="apellidoFuncionario">
+                        Apellido
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-person"></i>
+
+                        <input
+                            type="text"
+                            id="apellidoFuncionario"
+                            name="apellido"
+                            placeholder="Ej. García"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo-usuario">
+
+                    <label for="tipoDocumentoFuncionario">
+                        Tipo de documento
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-card-heading"></i>
+
+                        <select id="tipoDocumentoFuncionario" name="tipo_documento" required>
+
+                            <option value="CC">Cédula de ciudadanía</option>
+                            <option value="TI">Tarjeta de identidad</option>
+                            <option value="CE">Cédula de extranjería</option>
+                            <option value="PAS">Pasaporte</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo-usuario">
+
+                    <label for="numeroDocumentoFuncionario">
+                        Número de documento
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-hash"></i>
+
+                        <input
+                            type="text"
+                            id="numeroDocumentoFuncionario"
+                            name="numero_documento"
+                            placeholder="Ej. 1001001001"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo-usuario">
+
+                    <label for="telefonoFuncionario">
+                        Teléfono (opcional)
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-telephone"></i>
+
+                        <input
+                            type="tel"
+                            id="telefonoFuncionario"
+                            name="telefono"
+                            placeholder="Ej. 3001234567"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo-usuario">
+
+                    <label for="correoUsuario">
+                        Correo electrónico
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-envelope"></i>
+
+                        <input
+                            type="email"
+                            id="correoUsuario"
+                            name="correo"
+                            placeholder="usuario@smilecloud.com"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo-usuario">
+
+                    <label for="nombreUsuario">
+                        Nombre de usuario
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-person-badge"></i>
+
+                        <input
+                            type="text"
+                            id="nombreUsuario"
+                            name="usuario"
+                            placeholder="Ej. maria.garcia"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo-usuario">
+
+                    <label for="contrasenaUsuario">
+                        Contraseña
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-lock"></i>
+
+                        <input
+                            type="password"
+                            id="contrasenaUsuario"
+                            name="contrasena"
+                            placeholder="Ingrese una contraseña"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="campo-usuario" style="grid-column: 1 / -1;">
+
+                    <label for="rolUsuario">
+                        Rol
+                    </label>
+
+                    <div class="input-usuario">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        <select id="rolUsuario" name="id_rol" required>
+
+                            <option value="">
+                                Seleccione un rol
+                            </option>
+
+                            {% for r in roles %}
+
+                            <option value="{{ r.id_rol }}">
+                                {{ 'Odontólogo' if r.nombre == 'Odontologo' else r.nombre }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="informacion-modal-usuario">
+
+                <i class="bi bi-info-circle"></i>
+
+                <span>
+                    El rol determinará las funciones y módulos disponibles
+                    para el usuario dentro del sistema.
+                </span>
+
+            </div>
+
+
+            <div class="botones-modal-usuario">
+
+                <button
+                    type="button"
+                    class="btn-cancelar-usuario"
+                    onclick="cerrarModalUsuario()"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-guardar-usuario"
+                >
+                    <i class="bi bi-check-lg"></i>
+                    <span id="textoBotonUsuario">Registrar usuario</span>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const URL_CREAR_USUARIO = "{{ url_for('crear_usuario') }}";
+
+
+/* =========================
+   NUEVO: MOSTRAR ERROR CON SWEETALERT2
+========================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const caja = document.getElementById("sc-error");
+
+    if (!caja) { return; }
+
+    scAviso(
+        "No se pudo completar la acción",
+        caja.getAttribute("data-mensaje"),
+        "error"
+    );
+
+    scLimpiarURL(["error"]);
+
+});
+
+
+/* =========================
+   BUSCAR USUARIOS
+========================= */
+
+function buscarUsuarios() {
+
+    const input = document.getElementById("buscarUsuario");
+    const filtro = input.value.toLowerCase().trim();
+
+    const tabla = document.getElementById("tablaUsuarios");
+    const filas = tabla.querySelectorAll("tbody tr");
+
+    const mensaje = document.getElementById("sinResultadosUsuarios");
+
+    let encontrados = 0;
+
+    filas.forEach(function(fila) {
+
+        const texto = fila.textContent.toLowerCase();
+
+        if (texto.includes(filtro)) {
+
+            fila.style.display = "";
+            encontrados++;
+
+        } else {
+
+            fila.style.display = "none";
+
+        }
+
+    });
+
+
+    if (encontrados === 0) {
+
+        mensaje.style.display = "flex";
+
+    } else {
+
+        mensaje.style.display = "none";
+
+    }
+
+}
+
+
+/* =========================
+   PREPARAR EL MODAL
+   (crear o editar)
+========================= */
+
+function prepararModalUsuario(modo) {
+
+    const formulario = document.getElementById("formUsuario");
+    const contrasena = document.getElementById("contrasenaUsuario");
+
+    formulario.reset();
+
+    if (modo === "editar") {
+
+        document.getElementById("tituloModalUsuario").textContent = "Editar usuario";
+        document.getElementById("subtituloModalUsuario").textContent = "Actualiza los datos del funcionario y su cuenta.";
+        document.getElementById("iconoModalUsuario").className = "bi bi-pencil";
+        document.getElementById("textoBotonUsuario").textContent = "Guardar cambios";
+
+        contrasena.required = false;
+        contrasena.placeholder = "Déjala vacía para no cambiarla";
+
+    } else {
+
+        formulario.action = URL_CREAR_USUARIO;
+
+        document.getElementById("tituloModalUsuario").textContent = "Nuevo usuario";
+        document.getElementById("subtituloModalUsuario").textContent = "Registra al funcionario y su cuenta en Smile Cloud.";
+        document.getElementById("iconoModalUsuario").className = "bi bi-person-plus";
+        document.getElementById("textoBotonUsuario").textContent = "Registrar usuario";
+
+        contrasena.required = true;
+        contrasena.placeholder = "Ingrese una contraseña";
+
+    }
+
+}
+
+
+/* =========================
+   ABRIR MODAL (NUEVO USUARIO)
+========================= */
+
+function abrirModalUsuario() {
+
+    prepararModalUsuario("crear");
+
+    mostrarModalUsuario();
+
+}
+
+
+function mostrarModalUsuario() {
+
+    const modal = document.getElementById("modalUsuario");
+
+    modal.classList.add("mostrar");
+
+    document.body.style.overflow = "hidden";
+
+}
+
+
+/* =========================
+   CERRAR MODAL
+========================= */
+
+function cerrarModalUsuario() {
+
+    const modal = document.getElementById("modalUsuario");
+
+    modal.classList.remove("mostrar");
+
+    document.body.style.overflow = "";
+
+}
+
+
+/* =========================
+   CERRAR AL HACER CLICK AFUERA
+========================= */
+
+window.addEventListener("click", function(event) {
+
+    const modal = document.getElementById("modalUsuario");
+
+    if (event.target === modal) {
+
+        cerrarModalUsuario();
+
+    }
+
+});
+
+
+/* =========================
+   CERRAR CON ESCAPE
+========================= */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+
+        cerrarModalUsuario();
+
+    }
+
+});
+
+
+/* =========================
+   EDITAR USUARIO
+========================= */
+
+function editarUsuario(boton) {
+
+    const datos = boton.dataset;
+
+    prepararModalUsuario("editar");
+
+    document.getElementById("formUsuario").action = datos.url;
+
+    document.getElementById("nombreUsuario").value = datos.usuario;
+    document.getElementById("correoUsuario").value = datos.correo;
+    document.getElementById("rolUsuario").value = datos.idRol;
+    document.getElementById("nombreFuncionario").value = datos.nombre;
+    document.getElementById("apellidoFuncionario").value = datos.apellido;
+    document.getElementById("tipoDocumentoFuncionario").value = datos.tipoDocumento;
+    document.getElementById("numeroDocumentoFuncionario").value = datos.numeroDocumento;
+    document.getElementById("telefonoFuncionario").value = datos.telefono;
+
+    mostrarModalUsuario();
+
+}
+
+</script>
+
+{% endblock %}

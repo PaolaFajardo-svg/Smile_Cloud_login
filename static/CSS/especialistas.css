@@ -1,0 +1,297 @@
+/* =========================================================
+ESPECIALISTAS
+========================================================= */
+
+.especialistas-container {
+max-width: 1200px;
+margin: 40px auto;
+padding: 0 25px 50px;
+}
+
+/* ENCABEZADO */
+
+.encabezado-especialistas {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: #ffffff;
+padding: 30px 35px;
+border-radius: 18px;
+border: 1px solid #dce7eb;
+box-shadow: 0 5px 18px rgba(38, 50, 56, 0.08);
+margin-bottom: 22px;
+}
+
+.etiqueta-especialistas {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+background: #e8f7fa;
+color: #087c88;
+padding: 7px 13px;
+border-radius: 20px;
+font-size: 14px;
+font-weight: 600;
+margin-bottom: 12px;
+}
+
+.encabezado-especialistas h1 {
+margin: 0;
+color: #263238;
+font-size: 30px;
+font-weight: 700;
+}
+
+.encabezado-especialistas p {
+margin: 8px 0 0;
+color: #607d8b;
+font-size: 16px;
+}
+
+.icono-especialistas {
+width: 70px;
+height: 70px;
+border-radius: 18px;
+background: #e8f7fa;
+color: #00a8b5;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 32px;
+}
+
+/* RESUMEN */
+
+.resumen-especialistas {
+display: flex;
+align-items: center;
+gap: 15px;
+width: fit-content;
+background: #ffffff;
+border: 1px solid #dce7eb;
+border-radius: 15px;
+padding: 16px 22px;
+margin-bottom: 22px;
+box-shadow: 0 4px 12px rgba(38, 50, 56, 0.05);
+}
+
+.icono-resumen-especialistas {
+width: 44px;
+height: 44px;
+border-radius: 11px;
+background: #e8f7fa;
+color: #00a8b5;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 20px;
+}
+
+.numero-especialistas {
+display: block;
+color: #263238;
+font-size: 22px;
+font-weight: 700;
+line-height: 1;
+}
+
+.texto-numero-especialistas {
+color: #607d8b;
+font-size: 13px;
+}
+
+/* TARJETA */
+
+.tarjeta-especialistas {
+background: #ffffff;
+border: 1px solid #dce7eb;
+border-radius: 18px;
+box-shadow: 0 5px 18px rgba(38, 50, 56, 0.07);
+overflow: hidden;
+}
+
+.cabecera-tabla-especialistas {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 25px 30px;
+border-bottom: 1px solid #e7eef1;
+}
+
+.cabecera-tabla-especialistas h2 {
+margin: 0;
+color: #263238;
+font-size: 20px;
+font-weight: 700;
+}
+
+.cabecera-tabla-especialistas p {
+margin: 5px 0 0;
+color: #78909c;
+font-size: 14px;
+}
+
+.icono-tabla-especialistas {
+width: 42px;
+height: 42px;
+border-radius: 10px;
+background: #f4f8fa;
+color: #607d8b;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 19px;
+}
+
+/* TABLA */
+
+.tabla-responsive-especialistas {
+width: 100%;
+overflow-x: auto;
+}
+
+.tabla-especialistas {
+width: 100%;
+border-collapse: collapse;
+}
+
+.tabla-especialistas thead {
+background: #f4f8fa;
+}
+
+.tabla-especialistas th {
+padding: 16px 22px;
+text-align: left;
+color: #546e7a;
+font-size: 13px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.3px;
+white-space: nowrap;
+}
+
+.tabla-especialistas td {
+padding: 18px 22px;
+border-top: 1px solid #edf2f4;
+color: #37474f;
+font-size: 15px;
+vertical-align: middle;
+}
+
+.tabla-especialistas tbody tr {
+transition: background 0.2s ease;
+}
+
+.tabla-especialistas tbody tr:hover {
+background: #f8fbfc;
+}
+
+/* ID */
+
+.id-especialista {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+min-width: 38px;
+height: 30px;
+padding: 0 8px;
+border-radius: 8px;
+background: #e8f7fa;
+color: #087c88;
+font-size: 13px;
+font-weight: 700;
+}
+
+/* NOMBRE */
+
+.nombre-especialista {
+display: flex;
+align-items: center;
+gap: 12px;
+font-weight: 600;
+color: #263238;
+}
+
+.avatar-especialista {
+width: 40px;
+height: 40px;
+min-width: 40px;
+border-radius: 50%;
+background: #e8f7fa;
+color: #087c88;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 13px;
+font-weight: 700;
+}
+
+/* ESPECIALIDAD */
+
+.especialidad-especialista {
+display: inline-flex;
+align-items: center;
+padding: 7px 12px;
+border-radius: 20px;
+background: #f0f5f7;
+color: #455a64;
+font-size: 13px;
+font-weight: 600;
+}
+
+/* HORARIO */
+
+.horario-especialista {
+display: inline-flex;
+align-items: center;
+gap: 7px;
+color: #607d8b;
+white-space: nowrap;
+}
+
+.horario-especialista i {
+color: #00a8b5;
+font-size: 17px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+.especialistas-container {
+    margin: 25px auto;
+    padding: 0 15px 35px;
+}
+
+.encabezado-especialistas {
+    padding: 24px;
+}
+
+.encabezado-especialistas h1 {
+    font-size: 25px;
+}
+
+.encabezado-especialistas p {
+    font-size: 14px;
+}
+
+.icono-especialistas {
+    width: 55px;
+    height: 55px;
+    font-size: 25px;
+}
+
+.cabecera-tabla-especialistas {
+    padding: 20px;
+}
+
+.tabla-especialistas th,
+.tabla-especialistas td {
+    padding: 14px 16px;
+}
+
+}
+/* Acabado visual unificado */
+.especialistas-container{max-width:1450px;margin:34px auto;padding:0 22px 35px}.encabezado-especialistas{padding:30px 34px!important;border-radius:20px!important;background:linear-gradient(115deg,#123f61,#176b91 58%,#38aab2)!important;box-shadow:0 16px 34px rgba(20,78,108,.14)}
+.encabezado-especialistas h1{color:#fff!important;font-size:30px;font-weight:750}.encabezado-especialistas p{color:rgba(255,255,255,.82)!important}.etiqueta-especialistas{color:#e5fbff!important}.icono-especialistas{color:#fff!important;background:rgba(255,255,255,.14)!important}
+.resumen-especialistas,.tarjeta-especialistas{border:1px solid #e5edf3!important;border-radius:17px!important;box-shadow:0 9px 25px rgba(25,56,78,.045)!important}.tarjeta-especialistas{overflow:hidden}.cabecera-tabla-especialistas{background:#f7fafc!important;border-bottom:1px solid #e8eef3!important}.cabecera-tabla-especialistas h2{color:#183b53!important;font-weight:750}.tabla-responsive-especialistas{overflow:auto}.tabla-especialistas thead th{background:#f1f6f9!important;color:#526b7d!important;text-transform:uppercase;font-size:11px;letter-spacing:.5px}

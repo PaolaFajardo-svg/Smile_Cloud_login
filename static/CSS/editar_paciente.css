@@ -1,0 +1,512 @@
+/* =========================================================
+   SMILE CLOUD - EDITAR PACIENTE
+   Usa las variables definidas en base.css (con valores de respaldo)
+   ========================================================= */
+
+:root {
+    --sc-primary: var(--primary, #00a8b5);
+    --sc-primary-dark: var(--primary-dark, #008a95);
+    --sc-primary-light: var(--primary-light, #e6f7f9);
+    --sc-secondary: var(--secondary, #263238);
+    --sc-text: var(--text, #263238);
+    --sc-muted: #6b7c85;
+    --sc-border: var(--border, #dde5e9);
+    --sc-bg: var(--background, #f4f8fa);
+    --sc-white: var(--white, #ffffff);
+    --sc-shadow-sm: 0 3px 12px rgba(38, 50, 56, 0.06);
+    --sc-shadow-md: 0 10px 30px rgba(38, 50, 56, 0.10);
+}
+
+
+/* =========================================================
+   PÁGINA
+   ========================================================= */
+
+.pagina-formulario-paciente {
+    max-width: 1140px;
+
+    margin: 0 auto;
+
+    padding: 30px 20px 50px;
+
+    animation: aparecer 0.35s ease;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* ----- Encabezado ----- */
+
+.encabezado-pagina-formulario {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+
+    gap: 16px;
+
+    overflow: hidden;
+
+    margin-bottom: 26px;
+
+    padding: 28px 32px;
+
+    border-radius: 18px;
+
+    color: #fff;
+
+    background: linear-gradient(
+        135deg,
+        var(--sc-secondary),
+        var(--sc-primary)
+    );
+
+    box-shadow: var(--sc-shadow-md);
+}
+
+/* círculos decorativos */
+.encabezado-pagina-formulario::before,
+.encabezado-pagina-formulario::after {
+    content: "";
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    pointer-events: none;
+}
+
+.encabezado-pagina-formulario::before {
+    width: 220px;
+    height: 220px;
+
+    top: -90px;
+    right: -50px;
+}
+
+.encabezado-pagina-formulario::after {
+    width: 140px;
+    height: 140px;
+
+    bottom: -70px;
+    right: 180px;
+}
+
+.encabezado-pagina-formulario > * {
+    position: relative;
+
+    z-index: 1;
+}
+
+.titulo-pequeno {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    padding: 4px 12px;
+
+    border-radius: 50px;
+
+    background: rgba(255, 255, 255, 0.18);
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    letter-spacing: 1.2px;
+
+    text-transform: uppercase;
+}
+
+.encabezado-pagina-formulario h1 {
+    margin: 0 0 6px;
+
+    font-size: 28px;
+
+    font-weight: 700;
+}
+
+.encabezado-pagina-formulario p {
+    margin: 0;
+
+    font-size: 14px;
+
+    opacity: 0.9;
+}
+
+.encabezado-pagina-formulario .btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 9px 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    border-radius: 10px;
+
+    background: rgba(255, 255, 255, 0.12);
+
+    color: #fff;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    backdrop-filter: blur(4px);
+
+    transition: all 0.2s ease;
+}
+
+.encabezado-pagina-formulario .btn:hover {
+    background: #fff;
+
+    color: var(--sc-secondary);
+
+    transform: translateX(-2px);
+}
+
+
+/* ----- Formulario ----- */
+
+.formulario-paciente-pagina {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.formulario-paciente-pagina .seccion-formulario {
+    margin-bottom: 18px;
+}
+
+
+/* ----- Botones de acción ----- */
+
+.acciones-formulario {
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px;
+
+    margin-top: 22px;
+
+    padding: 16px 20px;
+
+    background: var(--sc-white);
+
+    border: 1px solid var(--sc-border);
+
+    border-radius: 14px;
+
+    box-shadow: var(--sc-shadow-sm);
+}
+
+.acciones-formulario .btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-width: 120px;
+
+    padding: 10px 22px;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.acciones-formulario .btn:hover {
+    transform: translateY(-1px);
+}
+
+.acciones-formulario .btn-success {
+    background: var(--sc-primary);
+
+    border-color: var(--sc-primary);
+
+    box-shadow: 0 6px 16px rgba(0, 168, 181, 0.30);
+}
+
+.acciones-formulario .btn-success:hover,
+.acciones-formulario .btn-success:focus {
+    background: var(--sc-primary-dark);
+
+    border-color: var(--sc-primary-dark);
+}
+
+.acciones-formulario .btn-secondary {
+    background: #eef2f4;
+
+    border-color: #eef2f4;
+
+    color: var(--sc-secondary);
+}
+
+.acciones-formulario .btn-secondary:hover {
+    background: #dde5e9;
+
+    border-color: #dde5e9;
+
+    color: var(--sc-secondary);
+}
+
+.acciones-formulario .btn-outline-secondary {
+    border-color: var(--sc-border);
+
+    color: var(--sc-muted);
+
+    background: transparent;
+}
+
+.acciones-formulario .btn-outline-secondary:hover {
+    background: #f4f8fa;
+
+    border-color: var(--sc-muted);
+
+    color: var(--sc-secondary);
+}
+
+
+/* =========================================================
+   SECCIONES, CAMPOS Y ALERTA
+   ========================================================= */
+
+.seccion-formulario {
+    background: var(--sc-white);
+
+    border: 1px solid var(--sc-border);
+
+    border-radius: 14px;
+
+    margin-bottom: 20px;
+
+    padding: 22px 24px 24px;
+
+    box-shadow: var(--sc-shadow-sm);
+
+    transition: box-shadow 0.25s ease;
+}
+
+.seccion-formulario:hover {
+    box-shadow: var(--sc-shadow-md);
+}
+
+.titulo-seccion {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin: -22px -24px 22px -24px;
+
+    padding: 14px 24px;
+
+    background: linear-gradient(90deg, var(--sc-primary-light), #f7fbfc);
+
+    color: var(--sc-text);
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    border-bottom: 1px solid var(--sc-border);
+
+    border-radius: 14px 14px 0 0;
+}
+
+.titulo-seccion i {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 32px;
+
+    height: 32px;
+
+    border-radius: 9px;
+
+    background: var(--sc-primary);
+
+    color: #fff;
+
+    font-size: 16px;
+
+    margin-right: 0;
+}
+
+.seccion-formulario label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--sc-text);
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.seccion-formulario .form-control,
+.seccion-formulario .form-select {
+    min-height: 42px;
+
+    border: 1px solid var(--sc-border);
+
+    border-radius: 10px;
+
+    background-color: #fbfdfe;
+
+    color: var(--sc-text);
+
+    font-size: 14px;
+
+    transition: all 0.2s ease;
+}
+
+.seccion-formulario .form-control::placeholder {
+    color: #a3b1b8;
+}
+
+.seccion-formulario .form-control:hover,
+.seccion-formulario .form-select:hover {
+    border-color: #b7c7ce;
+}
+
+.seccion-formulario .form-control:focus,
+.seccion-formulario .form-select:focus {
+    border-color: var(--sc-primary);
+
+    background-color: #fff;
+
+    box-shadow: 0 0 0 4px rgba(0, 168, 181, 0.14);
+}
+
+.seccion-formulario textarea.form-control {
+    min-height: 90px;
+
+    resize: vertical;
+}
+
+/* validación visual al enviar */
+.seccion-formulario .form-control:user-invalid,
+.seccion-formulario .form-select:user-invalid {
+    border-color: #e5484d;
+
+    box-shadow: 0 0 0 4px rgba(229, 72, 77, 0.10);
+}
+
+
+/* ----- Alerta informativa ----- */
+
+.alerta-formulario {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: var(--sc-primary-light);
+
+    border: 1px solid #bce7ed;
+
+    border-left: 4px solid var(--sc-primary);
+
+    color: var(--sc-secondary);
+
+    border-radius: 10px;
+
+    padding: 14px 18px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+.alerta-formulario i {
+    font-size: 20px;
+
+    color: var(--sc-primary);
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .pagina-formulario-paciente {
+        padding: 18px 12px 40px;
+    }
+
+    .encabezado-pagina-formulario {
+        padding: 22px 20px;
+    }
+
+    .encabezado-pagina-formulario h1 {
+        font-size: 22px;
+    }
+
+    .encabezado-pagina-formulario .btn {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .seccion-formulario {
+        padding: 18px 16px 20px;
+    }
+
+    .titulo-seccion {
+        margin: -18px -16px 18px -16px;
+
+        padding: 12px 16px;
+    }
+
+    .acciones-formulario {
+        flex-direction: column-reverse;
+
+        align-items: stretch;
+    }
+
+    .acciones-formulario .btn {
+        width: 100%;
+    }
+}

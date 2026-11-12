@@ -1,0 +1,472 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/ficha.css') }}">
+{% endblock %}
+
+{% block title %}Historia Clínica | Smile Cloud{% endblock %}
+
+{% block content %}
+
+<main class="hc-page" id="hc-app">
+
+    <!-- ===== ENCABEZADO ===== -->
+    <header class="hc-hero">
+        <div class="hc-hero-text">
+            <span class="hc-eyebrow">Smile Cloud · Módulo clínico</span>
+            <h1>Historia Clínica</h1>
+            <p>Información médica, evoluciones y documentos del paciente en un solo lugar.</p>
+        </div>
+        <div class="hc-hero-actions">
+            <span class="hc-role-badge" id="hc-rol-badge">Modo consulta</span>
+            <button class="hc-print" type="button" id="btn-imprimir-historial">🖨 Imprimir historia clínica</button>
+        </div>
+    </header>
+
+    <div class="hc-card">
+
+        <!-- ===== PESTAÑAS ===== -->
+        <div class="hc-tabs-wrap">
+            <div class="hc-tabs" role="tablist">
+                <button class="hc-tab active" data-tab="historial" role="tab"><span class="hc-tab-ico"></span> Historial</button>
+                <button class="hc-tab" data-tab="evoluciones" role="tab"><span class="hc-tab-ico"></span> Evoluciones</button>
+                <button class="hc-tab" data-tab="rx" role="tab"><span class="hc-tab-ico"></span> Rx y Documentos</button>
+                <button class="hc-tab" data-tab="documentos" role="tab"><span class="hc-tab-ico"></span> Consentimientos</button>
+            </div>
+            <div class="hc-paciente-chip" id="hc-paciente-chip" hidden>
+                <span class="hc-avatar hc-avatar-sm" id="hc-chip-avatar">--</span>
+                <span id="hc-chip-nombre"></span>
+            </div>
+        </div>
+
+        <!-- =====================================================
+             HISTORIAL
+             ===================================================== -->
+        <section class="hc-panel active" id="tab-historial">
+
+            <!-- Buscador -->
+            <div class="hc-search-row">
+                <div class="hc-search-box">
+                    <label for="buscar-documento">Buscar paciente por documento</label>
+                    <div class="hc-search-input">
+                        <span class="hc-search-ico"></span>
+                        <input id="buscar-documento" type="text" inputmode="numeric" placeholder="Ingrese el número de documento" autocomplete="off">
+                        <button type="button" id="btn-buscar-paciente">Buscar</button>
+                    </div>
+                    <small id="mensaje-busqueda"></small>
+                </div>
+            </div>
+
+            <!-- Estado vacío -->
+            <div class="hc-vacio" id="hc-vacio">
+                <div class="hc-vacio-ico">⚠️</div>
+                <h3>Busque un paciente para comenzar</h3>
+                <p>Con el documento podrá ver su historia clínica o crearla si es su primera visita.</p>
+            </div>
+
+            <!-- Contenido del paciente -->
+            <div id="hc-paciente" hidden>
+
+                <!-- Datos del paciente -->
+                <section class="hc-section hc-paciente-card">
+                    <div class="hc-paciente-head">
+                        <span class="hc-avatar" id="paciente-avatar">--</span>
+                        <div class="hc-paciente-titulo">
+                            <h2 id="paciente-titulo-nombre">Paciente</h2>
+                            <div class="hc-badges">
+                                <span class="hc-badge" id="badge-edad"></span>
+                                <span class="hc-badge hc-badge-warn" id="badge-menor" hidden>Menor de edad</span>
+                                <span class="hc-badge hc-badge-ok" id="badge-hc" hidden></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hc-grid hc-grid-3">
+                        <div><label for="paciente-nombre">Nombre completo</label><input id="paciente-nombre" type="text" readonly></div>
+                        <div><label for="paciente-documento">Documento</label><input id="paciente-documento" type="text" readonly></div>
+                        <div><label for="paciente-telefono">Teléfono</label><input id="paciente-telefono" type="text" readonly></div>
+                        <div><label for="paciente-correo">Correo electrónico</label><input id="paciente-correo" type="email" readonly></div>
+                        <div><label for="paciente-fecha-nacimiento">Fecha de nacimiento</label><input id="paciente-fecha-nacimiento" type="date" readonly></div>
+                        <div><label for="paciente-eps">EPS</label><input id="paciente-eps" type="text" readonly></div>
+                    </div>
+                </section>
+
+                <!-- ===== A) PACIENTE SIN HISTORIA: FORMULARIO NUEVO ===== -->
+                <form id="form-historia" class="hc-form" hidden autocomplete="off" novalidate>
+                    <div class="hc-callout" id="form-historia-aviso">
+                        <span class="hc-callout-ico">⚠️</span>
+                        <div>
+                            <strong>Este paciente aún no tiene historia clínica</strong>
+                            <p>Complete la información médica. Solo se registra una vez; después podrá consultarla desde aquí y las citas se documentan en <em>Evoluciones</em>.</p>
+                        </div>
+                    </div>
+
+                    <!-- 1. Condiciones actuales -->
+                    <section class="hc-section hc-step">
+                        <div class="hc-step-head"><span class="hc-step-num">1</span><div><h2>Condiciones médicas actuales</h2><p class="hc-muted">Síntomas que presenta hoy el paciente.</p></div></div>
+                        <div class="hc-chips" id="chips-sintoma"></div>
+                        <div class="hc-subfield" id="intensidad-dolor" hidden>
+                            <label>Intensidad del dolor</label>
+                            <div class="hc-chips" id="chips-intensidad"></div>
+                        </div>
+                        <div class="hc-field">
+                            <label for="condicion-otra">Otra condición actual</label>
+                            <input id="condicion-otra" type="text" placeholder="Opcional">
+                        </div>
+                    </section>
+
+                    <!-- 2. Antecedentes -->
+                    <section class="hc-section hc-step">
+                        <div class="hc-step-head"><span class="hc-step-num">2</span><div><h2>Antecedentes médicos y enfermedades</h2><p class="hc-muted">Enfermedades diagnosticadas o previas.</p></div></div>
+                        <div class="hc-chips" id="chips-antecedente"></div>
+                        <div class="hc-field" id="antecedente-otro-wrap" hidden>
+                            <label for="antecedente-otro">¿Cuál otro antecedente?</label>
+                            <input id="antecedente-otro" type="text">
+                        </div>
+                        <div class="hc-field">
+                            <label for="enfermedades-detalle">Detalle de enfermedades (anamnesis)</label>
+                            <textarea id="enfermedades-detalle" rows="2" placeholder="Tratamientos en curso, tiempo de evolución, controles..."></textarea>
+                        </div>
+                    </section>
+
+                    <!-- 3. Alergias -->
+                    <section class="hc-section hc-step">
+                        <div class="hc-step-head"><span class="hc-step-num">3</span><div><h2>Alergias</h2><p class="hc-muted">Indispensable antes de anestesia o medicación.</p></div></div>
+                        <div class="hc-chips" id="chips-alergias"></div>
+                        <div class="hc-subfield" id="lista-alergias" hidden>
+                            <label>Seleccione las alergias</label>
+                            <div class="hc-chips" id="chips-tipo-alergia"></div>
+                            <div class="hc-field">
+                                <label for="alergia-otra">Otra alergia</label>
+                                <input id="alergia-otra" type="text" placeholder="Opcional">
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 4. Medicamentos / cirugías / observaciones -->
+                    <section class="hc-section hc-step">
+                        <div class="hc-step-head"><span class="hc-step-num">4</span><div><h2>Medicamentos, cirugías y observaciones</h2><p class="hc-muted">Ficha de anamnesis.</p></div></div>
+                        <div class="hc-grid hc-grid-2">
+                            <div><label for="medicamentos">Medicamentos que toma</label><textarea id="medicamentos" rows="3" placeholder="Nombre, dosis y frecuencia"></textarea></div>
+                            <div><label for="cirugias">Cirugías / antecedentes importantes</label><textarea id="cirugias" rows="3"></textarea></div>
+                            <div class="hc-full"><label for="observaciones-medicas">Observaciones</label><textarea id="observaciones-medicas" rows="2"></textarea></div>
+                        </div>
+                    </section>
+
+                    <!-- 5. Contacto de emergencia -->
+                    <section class="hc-section hc-step">
+                        <div class="hc-step-head"><span class="hc-step-num">5</span><div><h2>Contacto de emergencia</h2><p class="hc-muted">Persona a quien llamar si ocurre algo durante la atención.</p></div></div>
+                        <div class="hc-grid hc-grid-3">
+                            <div><label for="emerg-nombre">Nombre completo *</label><input id="emerg-nombre" type="text"></div>
+                            <div><label for="emerg-parentesco">Parentesco</label><input id="emerg-parentesco" type="text" placeholder="Madre, esposo, amigo..."></div>
+                            <div><label for="emerg-telefono">Teléfono *</label><input id="emerg-telefono" type="tel"></div>
+                        </div>
+                    </section>
+
+                    <!-- 6. Acompañante -->
+                    <section class="hc-section hc-step">
+                        <div class="hc-step-head"><span class="hc-step-num">6</span><div><h2>Acompañante</h2><p class="hc-muted">Quién acompaña al paciente en esta visita.</p></div></div>
+                        <div class="hc-chips" id="chips-acompanante"></div>
+                        <div class="hc-grid hc-grid-2 hc-subfield" id="acompanante-datos" hidden>
+                            <div><label for="acomp-nombre">Nombre completo</label><input id="acomp-nombre" type="text"></div>
+                            <div><label for="acomp-documento">Documento</label><input id="acomp-documento" type="text"></div>
+                            <div><label for="acomp-parentesco">Parentesco</label><input id="acomp-parentesco" type="text"></div>
+                            <div><label for="acomp-telefono">Teléfono</label><input id="acomp-telefono" type="tel"></div>
+                        </div>
+                    </section>
+
+                    <!-- 7. Acudientes (solo menores) -->
+                    <section class="hc-section hc-step hc-step-menor" id="bloque-acudientes" hidden>
+                        <div class="hc-step-head"><span class="hc-step-num">7</span><div><h2>Acudientes del menor de edad</h2><p class="hc-muted">Obligatorio: el paciente es menor de 18 años. El acudiente 1 responde por la atención.</p></div></div>
+
+                        <h3 class="hc-minititulo">Acudiente 1 *</h3>
+                        <div class="hc-grid hc-grid-3">
+                            <div><label for="ac1-nombre">Nombre completo</label><input id="ac1-nombre" type="text"></div>
+                            <div><label for="ac1-doc">Documento</label><input id="ac1-doc" type="text"></div>
+                            <div><label for="ac1-parentesco">Parentesco</label><input id="ac1-parentesco" type="text" placeholder="Madre, padre, tutor..."></div>
+                            <div><label for="ac1-tel">Teléfono</label><input id="ac1-tel" type="tel"></div>
+                            <div class="hc-span-2"><label for="ac1-correo">Correo electrónico</label><input id="ac1-correo" type="email"></div>
+                        </div>
+
+                        <h3 class="hc-minititulo">Acudiente 2 <span class="hc-muted">(opcional)</span></h3>
+                        <div class="hc-grid hc-grid-3">
+                            <div><label for="ac2-nombre">Nombre completo</label><input id="ac2-nombre" type="text"></div>
+                            <div><label for="ac2-doc">Documento</label><input id="ac2-doc" type="text"></div>
+                            <div><label for="ac2-parentesco">Parentesco</label><input id="ac2-parentesco" type="text"></div>
+                            <div><label for="ac2-tel">Teléfono</label><input id="ac2-tel" type="tel"></div>
+                            <div class="hc-span-2"><label for="ac2-correo">Correo electrónico</label><input id="ac2-correo" type="email"></div>
+                        </div>
+                    </section>
+
+                    <p class="hc-error" id="hc-form-error" hidden></p>
+
+                    <div class="hc-actions">
+                        <button class="hc-btn secondary" type="button" id="btn-limpiar">Limpiar</button>
+                        <button class="hc-btn outline" type="button" id="btn-cancelar-edicion" hidden>Cancelar</button>
+                        <button class="hc-btn primary" type="submit" id="btn-guardar">Guardar historia clínica</button>
+                        <a class="hc-btn outline" href="/pacientes">Volver</a>
+                    </div>
+                </form>
+
+                <!-- ===== B) PACIENTE CON HISTORIA: RESUMEN ===== -->
+                <div id="hc-resumen" hidden>
+
+                    <div class="hc-section-head hc-resumen-head">
+                        <div>
+                            <h2 class="hc-h2-plain">Acceso rápido</h2>
+                            <p class="hc-muted" id="hc-resumen-meta"></p>
+                        </div>
+                        <button class="hc-btn outline small" type="button" id="btn-editar-historia">✏️ Actualizar información médica</button>
+                    </div>
+
+                    <div class="hc-quick">
+                        <article class="hc-quick-card hc-q-alergia">
+                            <header><span class="hc-q-ico"></span><h3>Alergias</h3></header>
+                            <div class="hc-q-body" id="quick-alergias"></div>
+                        </article>
+                        <article class="hc-quick-card hc-q-antecedente">
+                            <header><span class="hc-q-ico"></span><h3>Antecedentes médicos</h3></header>
+                            <div class="hc-q-body" id="quick-antecedentes"></div>
+                        </article>
+                        <article class="hc-quick-card hc-q-sintoma">
+                            <header><span class="hc-q-ico"></span><h3>Síntomas actuales</h3></header>
+                            <div class="hc-q-body" id="quick-sintomas"></div>
+                        </article>
+                    </div>
+
+                    <section class="hc-section">
+                        <h2>Información médica</h2>
+                        <dl class="hc-dl" id="resumen-medica"></dl>
+                    </section>
+
+                    <div class="hc-grid hc-grid-2 hc-resumen-contactos">
+                        <section class="hc-section">
+                            <h2>Contacto de emergencia</h2>
+                            <dl class="hc-dl" id="resumen-emergencia"></dl>
+                        </section>
+                        <section class="hc-section">
+                            <h2>Acompañante</h2>
+                            <dl class="hc-dl" id="resumen-acompanante"></dl>
+                        </section>
+                    </div>
+
+                    <section class="hc-section" id="resumen-acudientes-wrap" hidden>
+                        <h2>Acudientes</h2>
+                        <div class="hc-grid hc-grid-2" id="resumen-acudientes"></div>
+                    </section>
+
+                    <div class="hc-actions">
+                        <a class="hc-btn outline" href="/pacientes">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =====================================================
+             EVOLUCIONES
+             ===================================================== -->
+        <section class="hc-panel" id="tab-evoluciones">
+
+            <div class="hc-vacio" id="evo-sin-paciente">
+                <div class="hc-vacio-ico">⚠️</div>
+                <h3>Primero busque un paciente</h3>
+                <p>Use el buscador de la pestaña Historial para ver sus evoluciones.</p>
+            </div>
+
+            <div id="evo-contenido" hidden>
+                <div class="hc-section-head hc-evo-head">
+                    <div>
+                        <h2 class="hc-h2-plain">Evoluciones clínicas</h2>
+                        <p class="hc-muted" id="evo-contador">Sin citas registradas</p>
+                    </div>
+                    <div class="hc-evo-tools">
+                        <input type="search" id="evo-filtro" placeholder="Buscar en evoluciones...">
+                        <button class="hc-btn primary small" type="button" id="btn-agregar-evolucion" data-solo-odontologo hidden>+ Nueva evolución</button>
+                    </div>
+                </div>
+
+                <p class="hc-solo-lectura" id="evo-solo-lectura" hidden>👁 Modo consulta: solo el odontólogo puede registrar evoluciones.</p>
+
+                <!-- Formulario (solo odontólogo) -->
+                <form class="hc-section hc-evo-form" id="form-evolucion" data-solo-odontologo hidden autocomplete="off">
+                    <h2>Nueva evolución</h2>
+
+                    <div class="hc-grid hc-grid-3">
+                        <div><label for="evo-fecha">Fecha de la cita</label><input id="evo-fecha" type="date"></div>
+                        <div><label for="evo-hora">Hora</label><input id="evo-hora" type="time"></div>
+                        <div><label for="evo-proximo-control">Próximo control</label><input id="evo-proximo-control" type="date"></div>
+                    </div>
+
+                    <div class="hc-field"><label>Motivo de la consulta</label><div class="hc-chips" id="chips-evo-motivo"></div></div>
+                    <div class="hc-field"><label>Diagnóstico</label><div class="hc-chips" id="chips-evo-diagnostico"></div></div>
+                    <div class="hc-field"><label>Procedimiento realizado</label><div class="hc-chips" id="chips-evo-procedimiento"></div></div>
+
+                    <div class="hc-field hc-voz-field">
+                        <div class="hc-voz-top">
+                            <label for="evo-descripcion">Evolución clínica</label>
+                            <button type="button" class="hc-voz-btn" data-voz="evo-descripcion"><span class="hc-mic">🎙️</span><span class="txt">Dictar</span></button>
+                        </div>
+                        <textarea id="evo-descripcion" rows="5" placeholder="Describa lo realizado, hallazgos, indicaciones al paciente..."></textarea>
+                        <small class="hc-voz-estado"></small>
+                    </div>
+
+                    <div class="hc-field hc-voz-field">
+                        <div class="hc-voz-top">
+                            <label for="evo-observaciones">Observaciones adicionales</label>
+                            <button type="button" class="hc-voz-btn" data-voz="evo-observaciones"><span class="hc-mic">🎙️</span><span class="txt">Dictar</span></button>
+                        </div>
+                        <textarea id="evo-observaciones" rows="3" placeholder="Información adicional que no esté contemplada arriba..."></textarea>
+                        <small class="hc-voz-estado"></small>
+                    </div>
+
+                    <p class="hc-muted hc-voz-ayuda">Dictado por voz: diga «nueva línea» o «punto aparte» para dar formato. Funciona en Chrome y Edge.</p>
+                    <p class="hc-error" id="evo-error" hidden></p>
+
+                    <div class="hc-actions">
+                        <button class="hc-btn secondary" type="button" id="btn-cancelar-evolucion">Cancelar</button>
+                        <button class="hc-btn primary" type="submit" id="btn-guardar-evolucion">Guardar evolución</button>
+                    </div>
+                </form>
+
+                <!-- Historial de evoluciones -->
+                <div id="lista-evoluciones" class="hc-timeline">
+                    <p class="hc-empty">Aún no hay evoluciones registradas.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- RX -->
+        <section class="hc-panel" id="tab-rx">
+            <section class="hc-section">
+                <h2>Rx y documentos clínicos</h2>
+                <p class="hc-muted">Esta sección permite organizar radiografías y otros documentos asociados a la historia clínica.</p>
+                <input type="file" id="archivo-rx" multiple>
+                <div id="lista-archivos" class="hc-file-list"></div>
+            </section>
+        </section>
+
+        <!-- CONSENTIMIENTOS INFORMADOS -->
+        <section class="hc-panel" id="tab-documentos">
+            <section class="hc-section">
+                <h2>Consentimientos informados</h2>
+                <p class="hc-muted">Seleccione un consentimiento de la lista. Al elegirlo, el formato se abrirá inmediatamente para diligenciarlo en línea, firmarlo digitalmente o imprimirlo.</p>
+                <p id="cs-aviso" class="hc-error">Primero busque un paciente en la pestaña Historial.</p>
+                <div class="cs-selector-wrap">
+                    <label for="cs-selector">Tipo de consentimiento</label>
+                    <select id="cs-selector" class="cs-selector">
+                        <option value="">Seleccione un consentimiento...</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="hc-section" id="cs-formulario" hidden>
+                <div class="hc-section-head">
+                    <h2 id="cs-titulo"></h2>
+                </div>
+
+                <div class="hc-grid hc-grid-3">
+                    <div><label for="cs-paciente-nombre">Paciente</label><input id="cs-paciente-nombre" type="text" readonly></div>
+                    <div><label for="cs-paciente-documento">Documento</label><input id="cs-paciente-documento" type="text" readonly></div>
+                    <div><label for="cs-fecha">Fecha</label><input id="cs-fecha" type="date"></div>
+                    <div><label for="cs-profesional">Profesional que informa</label><input id="cs-profesional" type="text"></div>
+                </div>
+
+                <div id="cs-extras" class="hc-grid hc-grid-2 cs-bloque"></div>
+
+                <div class="cs-bloque">
+                    <label class="cs-check cs-check-linea">
+                        <input type="checkbox" id="cs-otro-firmante">
+                        <span>Firma un representante legal (paciente menor de edad o que no puede decidir por sí mismo)</span>
+                    </label>
+                    <div id="cs-firmante-datos" class="hc-grid hc-grid-3" hidden>
+                        <div><label for="cs-firmante-nombre">Nombre del representante</label><input id="cs-firmante-nombre" type="text"></div>
+                        <div><label for="cs-firmante-doc">Documento</label><input id="cs-firmante-doc" type="text"></div>
+                        <div><label for="cs-firmante-parentesco">Parentesco</label><input id="cs-firmante-parentesco" type="text" placeholder="Madre, padre, tutor..."></div>
+                    </div>
+                </div>
+
+                <div class="cs-bloque">
+                    <label>Decisión</label>
+                    <div class="cs-radios">
+                        <label class="cs-check"><input type="radio" name="cs-decision" value="Autorizo"><span>Autorizo</span></label>
+                        <label class="cs-check"><input type="radio" name="cs-decision" value="No autorizo"><span>No autorizo</span></label>
+                    </div>
+                </div>
+
+                <div class="cs-bloque">
+                    <h3 class="cs-subtitulo">Vista previa del documento</h3>
+                    <div id="cs-vista-previa" class="cs-vista"></div>
+                </div>
+
+                <div class="cs-bloque">
+                    <h3 class="cs-subtitulo">¿Cómo se firmará?</h3>
+                    <div class="cs-modos">
+                        <button type="button" class="cs-modo active" data-modo="digital">
+                            <strong>✍ Firma digital</strong>
+                            <span>El paciente firma en la pantalla</span>
+                        </button>
+                        <button type="button" class="cs-modo" data-modo="presencial">
+                            <strong>🖨 Imprimir y firmar presencial</strong>
+                            <span>Se imprime el formato y se firma en papel</span>
+                        </button>
+                    </div>
+
+                    <!-- FIRMA DIGITAL -->
+                    <div id="cs-pane-digital" class="cs-pane">
+                        <label class="cs-check cs-check-linea">
+                            <input type="checkbox" id="cs-acepta">
+                            <span>He leído y comprendido este consentimiento y mis preguntas fueron resueltas.</span>
+                        </label>
+                        <div class="hc-grid hc-grid-2">
+                            <div>
+                                <label id="cs-firma-firmante-label">Firma del paciente</label>
+                                <canvas id="cs-canvas-firmante" class="cs-canvas" width="600" height="200"></canvas>
+                                <button type="button" class="hc-btn secondary small" data-limpiar="firmante">Borrar firma</button>
+                            </div>
+                            <div>
+                                <label>Firma del profesional (opcional)</label>
+                                <canvas id="cs-canvas-profesional" class="cs-canvas" width="600" height="200"></canvas>
+                                <button type="button" class="hc-btn secondary small" data-limpiar="profesional">Borrar firma</button>
+                            </div>
+                        </div>
+                        <div class="hc-actions">
+                            <button type="button" class="hc-btn primary" id="cs-guardar-digital">Guardar consentimiento firmado</button>
+                        </div>
+                    </div>
+
+                    <!-- FIRMA PRESENCIAL -->
+                    <div id="cs-pane-presencial" class="cs-pane" hidden>
+                        <p class="hc-muted">Imprima el formato, entrégueselo al paciente para que lo lea y lo firme. Cuando esté firmado, regístrelo aquí.</p>
+                        <div class="hc-actions cs-acciones-izq">
+                            <button type="button" class="hc-btn outline" id="cs-imprimir">🖨 Imprimir formato</button>
+                            <button type="button" class="hc-btn primary" id="cs-registrar-fisico">Registrar como firmado en físico</button>
+                        </div>
+                    </div>
+
+                    <p id="cs-mensaje" class="hc-muted"></p>
+                </div>
+            </section>
+
+            <section class="hc-section">
+                <h2>Consentimientos del paciente</h2>
+                <div id="cs-historial" class="cs-historial">
+                    <p class="hc-empty">Aún no hay consentimientos registrados.</p>
+                </div>
+            </section>
+        </section>
+    </div>
+</main>
+
+<script>
+    window.PACIENTES_SMILE_CLOUD = {{ pacientes|default([])|tojson }};
+    /* Ajuste el nombre de la clave de sesión si en su proyecto el rol se guarda con otro nombre.
+       Valores esperados: "odontologo" o "odontólogo" (edición) / "recepcionista" (solo consulta). */
+    window.HC_CONFIG = {
+        rol: {{ (session.get('rol') or session.get('role') or '')|lower|tojson }},
+        usuario: {{ (session.get('nombre') or session.get('usuario') or '')|tojson }},
+        api: null   /* ej. "/api/historia-clinica" cuando existan los endpoints en Flask; null = guarda en el navegador */
+    };
+</script>
+<script src="{{ url_for('static', filename='JS/historial_clinico.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock %}

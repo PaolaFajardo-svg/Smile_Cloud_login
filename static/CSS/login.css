@@ -1,0 +1,241 @@
+:root {
+    --primary-gradient: linear-gradient(135deg, #0dcaf0 0%, #0d6efd 100%);
+    --primary-hover-gradient: linear-gradient(135deg, #31d2f2 0%, #0b5ed7 100%);
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    /* Fondo con imagen temática de clínica dental y capa oscura/azulada encima */
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.4), rgba(15, 23, 42, 0.7)), 
+                url('https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 440px;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    padding: 45px 40px;
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-container:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 30px 60px -15px rgba(13, 110, 253, 0.4);
+}
+
+/* =========================================================
+   ANIMACIÓN DE LA MUELA / LOGO
+   ========================================================= */
+.floating-logo {
+    width: 80px;
+    height: auto;
+    margin-bottom: 15px;
+    animation: flotar 3s ease-in-out infinite;
+}
+
+@keyframes flotar {
+    0% {
+        transform: translateY(0px) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-8px) rotate(2deg);
+    }
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+}
+
+.login-title {
+    text-align: center;
+    color: var(--text-main);
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.login-container .form-label {
+    color: var(--text-main);
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.login-container .form-control {
+    height: 48px;
+    border-radius: 12px;
+    border: 1.5px solid #cbd5e1;
+    padding: 10px 16px;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: all 0.25s ease;
+}
+
+.login-container .form-control:focus {
+    border-color: #0dcaf0;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(13, 202, 240, 0.15);
+}
+
+/* =========================================================
+   BOTÓN DINÁMICO CON DEGRADADO
+   ========================================================= */
+.btn-gradient {
+    background: var(--primary-gradient);
+    border: none;
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    background-size: 200% auto;
+    transition: 0.4s;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.35);
+}
+
+.btn-gradient:hover {
+    background: var(--primary-hover-gradient);
+    background-position: right center;
+    color: #ffffff;
+    box-shadow: 0 6px 20px rgba(13, 202, 240, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-gradient:active {
+    transform: scale(0.98);
+}
+
+.text-gradient-link {
+    color: #0d6efd;
+    transition: color 0.2s;
+}
+
+.text-gradient-link:hover {
+    color: #0dcaf0;
+}
+
+/* Ajustes para el grupo de input con botón de contraseña */
+.input-group .form-control {
+    border-top-left-radius: 12px !important;
+    border-bottom-left-radius: 12px !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.toggle-password {
+    border-color: #cbd5e1;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-top-right-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.toggle-password:hover {
+    background-color: #f1f5f9;
+    color: var(--text-main);
+    border-color: #0dcaf0;
+}
+
+.input-group:focus-within .toggle-password {
+    border-color: #0dcaf0;
+    box-shadow: 0 0 0 4px rgba(13, 202, 240, 0.15);
+}
+
+
+
+/* ========================================
+   BLOQUEO TEMPORAL DEL INICIO DE SESIÓN
+======================================== */
+.bloqueo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 285px;
+    margin: 14px auto 0;
+    padding: 14px 16px;
+    box-sizing: border-box;
+    background: #f3f7fb;
+    border: 1px solid #dfe8f1;
+    border-radius: 14px;
+    text-align: center;
+    color: #25364a;
+}
+
+.bloqueo-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 6px;
+    border-radius: 50%;
+    background: #e3eef8;
+    color: #5086b4;
+    font-size: 17px;
+}
+
+.bloqueo-titulo {
+    margin: 0 0 4px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.bloqueo-descripcion {
+    margin: 0 0 6px;
+    color: #718096;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.bloqueo-tiempo {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    font-size: 25px;
+    font-weight: 700;
+    color: #305f89;
+    font-variant-numeric: tabular-nums;
+}
+
+.bloqueo-unidad {
+    font-size: 12px;
+    font-weight: 400;
+}

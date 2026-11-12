@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}
+Pacientes | Smile Cloud
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/pacientes.css') }}">
+{% endblock %}
+
+{% block content %}
+<main class="sc-view-container">
+
+    <section class="contenedor-tabla">
+
+        <!-- ENCABEZADO DE LA SECCIÓN -->
+        <div class="seccion-titulo">
+            <div class="titulo-box">
+                <div class="sc-view-icon">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div>
+                    <span class="titulo-pequeno">Gestión clínica</span>
+                    <h2>Gestión de Pacientes</h2>
+                </div>
+            </div>
+
+            <div class="acciones-pacientes">
+                <a href="/crear_paciente" class="btn btn-success">
+                    <i class="bi bi-person-plus-fill"></i>
+                    <span>Crear paciente</span>
+                </a>
+
+                <div class="buscador-pacientes">
+                    <i class="bi bi-search"></i>
+                    <input
+                        type="text"
+                        id="buscarPaciente"
+                        class="form-control"
+                        placeholder="Buscar por nombre, documento, correo..."
+                        autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA CON SCROLL INTERNO PARA MANTENER TODO EN UNA PANTALLA -->
+        <div class="tabla-responsive">
+
+            <table class="table table-hover" id="tablaPacientes">
+                <thead>
+                    <tr>
+                        <th>Paciente</th>
+                        <th>Documento</th>
+                        <th>Contacto</th>
+                        <th>Dirección</th>
+                        <th>EPS</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="listaPacientes">
+                    {% for paciente in pacientes %}
+                    <tr class="fila-paciente">
+                        <td>
+                            <div class="sc-patient-card">
+                                <div class="sc-patient-avatar">
+                                    {{ paciente.nombre[0] | upper }}
+                                </div>
+                                <div class="sc-patient-details">
+                                    <strong>{{ paciente.nombre }} {{ paciente.apellido }}</strong>
+                                    <small><i class="bi bi-envelope"></i> {{ paciente.correo or 'Sin correo' }}</small>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="sc-badge-doc">
+                                <i class="bi bi-card-heading"></i> {{ paciente.numero_documento }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="sc-phone-text">
+                                <i class="bi bi-telephone text-primary"></i> {{ paciente.telefono or 'N/R' }}
+                            </div>
+                        </td>
+
+                        <td>
+                            <span class="text-truncate-custom" title="{{ paciente.direccion }}">
+                                {{ paciente.direccion or 'No registrada' }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="sc-badge-eps">
+                                {{ paciente.eps or 'Particular' }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="acciones-tabla">
+                                <a
+                                    href="/editar/{{ paciente.id_paciente }}"
+                                    class="btn btn-warning btn-sm"
+                                    title="Editar datos del paciente">
+                                    <i class="bi bi-pencil-square"></i>
+                                    <span>Editar</span>
+                                </a>
+
+                                <!-- NUEVO: confirmación con SweetAlert2 (antes usaba onclick con confirm) -->
+                                <a
+                                    href="/eliminar/{{ paciente.id_paciente }}"
+                                    class="btn btn-danger btn-sm"
+                                    title="Eliminar registro"
+                                    data-sc-confirm="¿Eliminar paciente?"
+                                    data-sc-texto="Se borrará su ficha y no podrás recuperarla."
+                                    data-sc-ok="Sí, eliminar"
+                                    data-sc-tipo="peligro">
+                                    <i class="bi bi-trash3"></i>
+                                    <span>Eliminar</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="sin-registros">
+                            <div class="sc-empty-state">
+                                <i class="bi bi-people"></i>
+                                <p>No hay pacientes registrados.</p>
+                                <small>Puedes comenzar registrando un nuevo paciente con el botón superior.</small>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                    <tr id="sinResultadosBusqueda" style="display: none;">
+                        <td colspan="6" class="sin-registros">
+                            <div class="sc-empty-state">
+                                <i class="bi bi-search"></i>
+                                <p>No se encontraron pacientes.</p>
+                                <small>Intenta buscando con otro nombre, documento o correo.</small>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+/* ===== Buscador de pacientes ===== */
+const buscador = document.getElementById("buscarPaciente");
+const filas = document.querySelectorAll(".fila-paciente");
+const sinResultados = document.getElementById("sinResultadosBusqueda");
+
+if (buscador) {
+    buscador.addEventListener("input", function () {
+        const texto = this.value.toLowerCase().trim();
+        let encontrados = 0;
+
+        filas.forEach(function (fila) {
+            const contenido = fila.textContent.toLowerCase();
+            if (contenido.includes(texto)) {
+                fila.style.display = "";
+                encontrados++;
+            } else {
+                fila.style.display = "none";
+            }
+        });
+
+        if (sinResultados) {
+            sinResultados.style.display = (texto !== "" && encontrados === 0) ? "" : "none";
+        }
+    });
+}
+
+/* ===== Confirmación con SweetAlert2 para los enlaces con data-sc-confirm ===== */
+document.addEventListener("click", function (e) {
+    const enlace = e.target.closest("[data-sc-confirm]");
+    if (!enlace) return;
+
+    e.preventDefault(); // frena la eliminación hasta que el usuario confirme
+
+    const peligro = enlace.dataset.scTipo === "peligro";
+
+    Swal.fire({
+        title: enlace.dataset.scConfirm || "¿Está seguro?",
+        text: enlace.dataset.scTexto || "",
+        icon: peligro ? "warning" : "question",
+        showCancelButton: true,
+        confirmButtonText: enlace.dataset.scOk || "Aceptar",
+        cancelButtonText: "Cancelar",
+        confirmButtonColor: peligro ? "#d33" : "#3d7b7e",
+        reverseButtons: true,
+        focusCancel: peligro
+    }).then(function (resultado) {
+        if (resultado.isConfirmed) {
+            window.location.href = enlace.href; // ahora sí elimina
+        }
+    });
+});
+</script>
+{% endblock %}

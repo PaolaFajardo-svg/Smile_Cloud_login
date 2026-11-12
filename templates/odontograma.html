@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smile Cloud | Odontograma clínico</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/odontograma_anatomico.css') }}"
+    >
+
+    <!-- NUEVO: estilos de alertas -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='CSS/alertas.css') }}"
+    >
+</head>
+
+<body>
+
+    <!-- ENCABEZADO -->
+    <header class="topbar">
+
+        <a class="brand" href="/" aria-label="Smile Cloud, inicio">
+            <span class="brand-icon">✦</span>
+
+            <span class="brand-name">
+                Smile<span>Cloud</span>
+            </span>
+        </a>
+
+        <div class="page-heading">
+            <h1>Odontograma clínico</h1>
+            <p>Registro visual del estado dental del paciente</p>
+        </div>
+
+        <div class="header-tag">
+            <span class="status-dot"></span>
+            Área clínica
+        </div>
+
+    </header>
+
+
+    <main class="page-wrap">
+
+        <!-- INFORMACIÓN DEL PACIENTE -->
+        <section class="patient-card">
+
+            <div class="patient-accent"></div>
+
+            <div class="patient-avatar">
+                {% if paciente and paciente.nombre %}
+                    {{ paciente.nombre[:1] }}{% if paciente.apellido %}{{ paciente.apellido[:1] }}{% endif %}
+                {% else %}
+                    <span>＋</span>
+                {% endif %}
+            </div>
+
+            <div class="patient-main">
+
+                <div class="patient-label">
+                    INFORMACIÓN DEL PACIENTE
+                </div>
+
+                {% if paciente %}
+
+                    <h2>
+                        {{ paciente.nombre or 'Nombre no disponible' }}
+                        {{ paciente.apellido or '' }}
+                    </h2>
+
+                    <p class="patient-note">
+                        Paciente seleccionado
+                    </p>
+
+                {% else %}
+
+                    <h2>Sin paciente seleccionado</h2>
+
+                    <p class="patient-note">
+                        Al conectar la base de datos, aquí aparecerá
+                        la información del paciente.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+            <div class="patient-details">
+
+                <div class="patient-field">
+                    <span class="field-label">Documento</span>
+
+                    <strong>
+                        {{ paciente.documento
+                           if paciente and paciente.documento
+                           else '—' }}
+                    </strong>
+                </div>
+
+                <div class="patient-field">
+                    <span class="field-label">Edad</span>
+
+                    <strong>
+                        {% if paciente and paciente.edad is not none %}
+                            {{ paciente.edad }} años
+                        {% else %}
+                            —
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="patient-field">
+                    <span class="field-label">Fecha de consulta</span>
+
+                    <strong>
+                        {{ paciente.fecha_consulta
+                           if paciente and paciente.fecha_consulta
+                           else '—' }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div class="content-grid">
+
+            <!-- ODONTOGRAMA -->
+            <section class="odontogram-card">
+
+                <div class="section-heading">
+
+                    <div>
+                        <span class="eyebrow">EXAMEN DENTAL</span>
+                        <h2>Mapa dental</h2>
+                    </div>
+
+                    <span class="tooth-count">
+                        32 piezas dentales
+                    </span>
+
+                </div>
+
+
+                <!-- ARCADA SUPERIOR -->
+                <div class="arch-label">
+                    <span class="arch-line"></span>
+                    ARCADA SUPERIOR
+                    <span class="arch-line"></span>
+                </div>
+
+                <div class="teeth-scroll">
+                    <div
+                        class="fila-dientes"
+                        id="dientesSuperiores"
+                        aria-label="Arcada superior"
+                    ></div>
+                </div>
+
+
+                <!-- SEPARADOR -->
+                <div class="midline">
+                    <span></span>
+                    <small>Línea media</small>
+                    <span></span>
+                </div>
+
+
+                <!-- ARCADA INFERIOR -->
+                <div class="arch-label lower-label">
+                    <span class="arch-line"></span>
+                    ARCADA INFERIOR
+                    <span class="arch-line"></span>
+                </div>
+
+                <div class="teeth-scroll">
+                    <div
+                        class="fila-dientes"
+                        id="dientesInferiores"
+                        aria-label="Arcada inferior"
+                    ></div>
+                </div>
+
+
+                <!-- LEYENDA DE COLORES -->
+                <div class="legend">
+
+                    <span class="legend-title">
+                        REFERENCIA DE ESTADOS
+                    </span>
+
+                    <span>
+                        <i class="legend-dot caries"></i>
+                        Caries
+                    </span>
+
+                    <span>
+                        <i class="legend-dot restauracion"></i>
+                        Restauración
+                    </span>
+
+                    <span>
+                        <i class="legend-dot sellante"></i>
+                        Sellante
+                    </span>
+
+                    <span>
+                        <i class="legend-dot corona"></i>
+                        Corona
+                    </span>
+
+                    <span>
+                        <i class="legend-dot endodoncia"></i>
+                        Endodoncia
+                    </span>
+
+                    <span>
+                        <i class="legend-dot implante"></i>
+                        Implante
+                    </span>
+
+                    <span>
+                        <i class="legend-dot protesis"></i>
+                        Prótesis
+                    </span>
+
+                    <span>
+                        <i class="legend-dot fractura"></i>
+                        Fractura
+                    </span>
+
+                </div>
+
+
+                <!-- OBSERVACIONES -->
+                <section class="observations">
+
+                    <label for="observaciones">
+                        Observaciones clínicas
+                    </label>
+
+                    <textarea
+                        id="observaciones"
+                        placeholder="Escribe aquí las observaciones de la consulta..."
+                    ></textarea>
+
+                    <p>
+                        Las observaciones quedarán listas para vincularse
+                        al registro clínico del paciente.
+                    </p>
+
+                </section>
+
+            </section>
+
+
+            <!-- PANEL LATERAL -->
+            <aside class="side-panel">
+
+                <!-- SUPERFICIE SELECCIONADA -->
+                <section class="panel-card selection-card">
+
+                    <span class="eyebrow">SELECCIÓN ACTUAL</span>
+
+                    <h2>Superficie dental</h2>
+
+                    <div
+                        class="selection-value"
+                        id="superficieSeleccionada"
+                    >
+                        Selecciona una superficie del diente
+                    </div>
+
+                    <p class="helper-text">
+                        Haz clic en una cara dental para registrar
+                        su condición.
+                    </p>
+
+                </section>
+
+
+                <!-- CONDICIONES DENTALES -->
+                <section class="panel-card">
+
+                    <span class="eyebrow">REGISTRO CLÍNICO</span>
+
+                    <h2>Estado dental</h2>
+
+                    <p class="panel-description">
+                        Elige el estado que deseas marcar en la
+                        superficie seleccionada.
+                    </p>
+
+                    <div class="conditions-grid">
+
+                        <button
+                            class="condicion"
+                            type="button"
+                            data-condicion="caries"
+                        >
+                            <i class="condition-icon caries">●</i>
+                            <span>Caries</span>
+                        </button>
+
+                        <button
+                            class="condicion"
+                            type="button"
+                            data-condicion="restauracion"
+                        >
+                            <i class="condition-icon restauracion">■</i>
+                            <span>Restauración</span>
+                        </button>
+
+                        <button
+                            class="condicion"
+                            type="button"
+                            data-condicion="sellante"
+                        >
+                            <i class="condition-icon sellante">▲</i>
+                            <span>Sellante</span>
+                        </button>
+
+                        <button
+                            class="condicion"
+                            type="button"
+                            data-condicion="corona"
+                        >
+                            <i class="condition-icon corona">△</i>
+                            <span>Corona</span>
+                        </button>
+
+                        <button
+                            class="condicion"
+                            type="button"
+                            data-condicion="endodoncia"
+                        >
+                            <i class="condition-icon endodoncia">│</i>
+                            <span>Endodoncia</span>
+                        </button>
+
+                        <button
+                            class="condicion"
+                            type="button"
+                            data-condicion="implante"
+                        >
+                            <i class="condition-icon implante">✚</i>
+                            <span>Implante</span>
+                        </button>
+
+                        <button
+                            class="condicion"
+                            type="button"
+                            data-condicion="protesis"
+                        >
+                            <i class="condition-icon protesis">◆</i>
+                            <span>Prótesis</span>
+                        </button>
+
+                        <button
+                            class="condicion"
+                            type="button"
+                            data-condicion="fractura"
+                        >
+                            <i class="condition-icon fractura">★</i>
+                            <span>Fractura</span>
+                        </button>
+
+                    </div>
+
+
+                    <!-- ACCIONES -->
+                    <div class="button-stack">
+
+                        <button
+                            class="btn-secondary"
+                            id="limpiarSuperficie"
+                            type="button"
+                        >
+                            Limpiar superficie
+                        </button>
+
+                        <button
+                            class="btn-danger"
+                            id="reiniciar"
+                            type="button"
+                        >
+                            Reiniciar odontograma
+                        </button>
+
+                    </div>
+
+                    <p class="storage-note">
+                        <span>ⓘ</span>
+                        Los cambios se mantienen en esta pantalla
+                        mientras no se recargue. La persistencia se
+                        habilitará al conectar la base de datos.
+                    </p>
+
+                </section>
+
+
+                <!-- GUÍA DE SUPERFICIES -->
+                <section class="panel-card surface-guide">
+
+                    <h2>Caras dentales</h2>
+
+                    <ul>
+                        <li>
+                            <strong>Mesial:</strong>
+                            hacia el centro de la arcada.
+                        </li>
+
+                        <li>
+                            <strong>Distal:</strong>
+                            hacia atrás de la arcada.
+                        </li>
+
+                        <li>
+                            <strong>Vestibular:</strong>
+                            hacia labios o mejillas.
+                        </li>
+
+                        <li>
+                            <strong>Palatina / lingual:</strong>
+                            hacia el paladar o la lengua.
+                        </li>
+
+                        <li>
+                            <strong>Oclusal / incisal:</strong>
+                            superficie de masticación o borde cortante.
+                        </li>
+                    </ul>
+
+                </section>
+
+            </aside>
+
+        </div>
+
+
+        <!-- PIE DE PÁGINA -->
+        <footer class="footer">
+
+            <span class="footer-mark">✦</span>
+
+            SmileCloud
+
+            <span class="footer-separator">•</span>
+
+            Odontograma clínico
+
+            <span class="footer-right">
+                Gestión clínica dental
+            </span>
+
+        </footer>
+
+    </main>
+
+
+    <!-- NUEVO: SweetAlert2 y funciones de alertas (antes del script del odontograma) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.all.min.js"></script>
+    <script src="{{ url_for('static', filename='JS/alertas.js') }}"></script>
+
+    <script
+        src="{{ url_for('static', filename='js/odontograma_anatomico.js') }}"
+    ></script>
+
+</body>
+</html>
